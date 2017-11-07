@@ -1,0 +1,51 @@
+* Generative models
+** Generative vs discriminative
+   - Discriminative models: learns f that maps input (x) to output class label (y). They directly learn the conditional dist P(y|x)
+   - Generative model: learns joint p P(x,y). This can be converted to P(y|x) via Bayes rule, but the generative ability can be used for creating new (x,y) samples.
+     Potential to understand and explain the underlying structure of input data even when no lables.
+** Gaussian discriminant analysis
+   
+** Generative Adversarial Networks (GANs)
+   Train an image generator by simultaneously training a discriminator to challenge it to improve.
+   Discriminator network: conv net that assigns probability that an image is real and not fake.
+   Generative network: kind of conv net that uses transpose convs, sometimes known as deconvolutional network. Takes as input noise (the code), and outputs img.
+
+   [[./deconvolution.png]]
+
+   Since the discriminator is just a conv net, we can backpropagate to find the gradients of the input img. This tells us what parts of the img to change in order to yield greater prob of being real in the eyes of the discriminative net.
+   Update the ws of our generative net with respect to these grads, to output more "real" than before.
+   Discriminative net is constantly trying to find diffs between fake and real imgs, and the generative net keeps getting closer to the real.
+
+   When generating images, there are no concept of classes in the GAN. The network is not learning to make imgs of cars and ducks, it's learning to make imgs that look real in general. So, this results is images that may have some combination of features from all sorts of objects, like the outline of a table but the coloring of a frog.
+
+   To combat this: adding multiple objectives to the discriminator's cost fun. In a simple GAN, the discriminator only has one idea of what an incredibly "real" img looks like. This leads to the generator either collapsing to only produce one img no matter what noise it starts with, or only producing imgs that have some resemblance of real features but no distinct uniqueness.
+
+*** TODO Improving GANS
+
+*** TODO InfoGAN
+    
+   
+** Gaussian mixture model
+** Hidden Markov model
+** Naive Bayes
+*** Bayes Theorem
+    P(A|B) = P(B|A)*P(A)/P(B)
+   To find which category has higher prob P(A|B), we dont need the divisor, so we discard it.
+*** Example
+    P(sports|a very close game) = P(a very close game|sports) x P(sports) / P(a very close game).
+
+    We can just compare P(a very close game|Sports)xP(Sports) with P(a very close game|Not sports)xP(Not Sports)
+
+    Wich is easier to calculate. Just count how many times this sentence apppears in the Sports category and divide it by the total.
+**** Being naive
+     Assume every feature in A is *independent* of the other ones. In the example, look at individual words, rather than sentences.
+
+     P(a very close game) = P(a) x P(very) x P(close) x P(game)
+     P(a very close game|Sports) = P(a|Sports)xP(very|Sports)xP(close|Sports)xP(game|Sports)
+     Calculating this is just counting in the training set. Calculate the prior probability of each cat: P(Sports), P(Not Sports).
+     P(game|Sports) means counting how many times the word "game" appears in Sports sample divided by the total number of words in sports.
+**** Laplace smoothing
+     When a probability is 0, the multiplication is nullified. So we add a 1 to every count so it's never zero. To balance this, we add the number of possible words to the divisor, so the division will never be grater than 1.
+
+** Latend Dirchlet allocation
+** Restricted Boltzmann machine

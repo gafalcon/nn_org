@@ -1,0 +1,395 @@
+
+* Neural Networks
+** Preprocessing
+   Any preprocessing stats must only be computed on the training data, and then applied to the validation/test data. First split in train/val/test and then apply stats on the train data, to later apply to val and test.
+*** Normalization
+**** mean normalization, mean substraction (0 mean)
+**** scaling (-1 , 1) (0, 1)
+     make all dimensions around the same scale
+     In images, the range is equal for all pixels (0 to 255), so not extrictly necessary.
+     - divide by  its standard deviation once its been zero-centered. or
+     - normalize each dimension so that the min and max is -1 and 1.
+       
+    [[./imgs/preprocessing.png]]
+*** one-hot encoding
+    - remember to check if is necessary to remove one column when hot-encoding
+*** PCA
+    first, center the data.
+    reduce dimensionality of data, discarding dimensions along which the data has no variance
+*** whitening
+    if input is multivariate gaussian, then the whitened data will be a gaussian with zero mean and identity covariance matrix.
+    [[./imgs/pca_whitening.png]]
+** Base
+*** bias and weights
+    Weights control the strength of influence of one neuron on another.
+*** backpropagation
+    Way of computing gradients through recursive application of *chain rule*
+*** gradient descent
+*** perceptron
+*** sigmoid neurons
+*** activation function
+    Represent non linearities. Firing rate of neurons.
+*** learning rate
+**** variable learning rate
+*** batch size
+*** num epochs
+*** mini-batch gradient descent
+    cuz its wasteful to compute the full loss over the entire training set in order to perform a single param update. Instead train on batches, (256 samples), each batch is used to perform a param update.
+    Faster convergence.
+    Size of the mini-batch is a hyperparameter. In practice uses power of 2 cuz many vectorized ops work faster that way. Not usually cross-validated.
+**** Stochastic Gradient Descent (SGD) 
+     online gradient descent. mini-batch is only single example.
+     Is computationally more efficient to evaluate gradient for 100 examples, than for one example 100 times.
+** Optimizers
+*** GradientDescentOptimizer
+   Adam is currently recommended as the default algorithm to use, and often works slightly better than RMSProp. However, it is often also worth trying SGD+Nesterov Momentum as alternative.
+*** DONE Momentum
+    CLOSED: [2017-10-24 mar 10:33]
+    Enjoys better convergence rates on deep networks. Almost always.
+    - Loss is interpreted as the height (or Potential energy *U*)of a hilly terrain. The optimization is like simulating the parameter vector (i.e. a particle) as rolling on the landscape.
+    - The Force on the particle *F* = - \nabla U. The force is the negative gradient of the loss function. *F=ma* so the gradient is proportional to the acceleration of the particle. This physics view suggests an update in which the gradient directly influences the veloctiy, which in turn has an effect on the position:
+    - v = mu * v - learning_reate * dx #integrate velocity
+    - x += v  # integrate position
+    - *v* is initialized at zero.
+    - *mu* (typical value 0.9). Called momentum, but is more like friction. Damps the velocity and reduces kinetic energy, or else the particle wouldnt stop at the bottom.
+    - Cross-validation: values such as [0.5, 0.9, 0.95, 0.99].
+    - Optimization can benefit from momentum schedules, increasing momentum. (Ex: start with 0.5 and anneal it to 0.99)
+*** Nesterov Momentum
+    Slightly better than standard momentum.
+    - When param vector is at *x*, we know that momentum term alone moves the param vector by mu*v. 
+*** Per-parameter adaptive learning rate methods
+    Each param has different learning rate.
+**** TODO AdaGRAD
+     Adaptive learning rate.
+     - cache += dx**2 #Gradient dx and parameter vector x
+     - x += - learning_rate * dx / (np.sqrt(cache) + eps)
+     - *cache* is used to normalize the param update step, element-wise.
+     - Weights receiving high gradients will have their effective lr reduced, whicle weights with small or infrequent updates will have their effective lr increased. *eps* prevents division by zero.
+     - Downside: With deep learning, the monotonic lr usually proves too aggressive and stops learning too early.
+**** RMSprop.
+     Adjust Adagrad to reduce its aggresive, monotonically decreasing learning rate. Uses a moving average of squared gradients.
+     - cache = decay_rate * cache + ( 1 - decay_rate) * dx**2
+     - x += - learning_rate * dx / (np.sqrt(cache) + eps)
+     - *decay_rate* = [0.9, 0.99, 0.999].
+     - *cache* var is "leaky". RMSProp still modulates the lr of each weight based on the magnitudes of its gradients, but unlike Adagrad the updates do not get monotonically smaller.
+**** Adam
+     Like RMSProp with momentum. The "smooth" version of the gradient *m* is used instead of the raw (and perhaps) noisy gradient vector *dx*.
+*** TODO random search 
+    try many different random weights and keep track of the one that works best.
+*** TODO random local search
+    extend one foot in a random direction and then take a step only if it leads downhill
+** Activation Functions
+*** linear: No activation function
+*** Sigmoid
+    Takes a real value and squashes it in the range between 0-1
+    sigma = 1/1+e^(-x)
+    Historical, now is rarely ever used, cuz of two major drawbacks:
+    - Saturate and kill gradients. When the neuron saturates at either 0 or 1, the gradient is almost zero. Which makes the training very slow.
+      Needs to pay extra attention to weight initialization, cuz it can saturate the neurons.
+    - sigmoid outputs are not zero-centered. So following layers would receive data not zero-centered. During grad descent, makes weights become all positive or negative.
+      Can introduce undesirable zig-zagging in the weights updates. This problem is less severe than the saturation above.
+*** tanh
+    Squashes values to the range [-1, 1]. Its activations saturate, but the output is zero-centered.
+    Always preferred over sigmoids.
+*** ReLU
+    - f(x) = max(0, x)
+    - greatly accelerates the convergence of sgd compared to tanh/sigmoid.
+    - involves unexpensive operations compared to the tanh/sigmoid.
+    - Can "die" during training. A large gradient flowing through a ReLU could cause the weights to update in such a way that the neuron will never activate on any datapoint again. So the gradient through the unit will forever be zero. Ex: 40% of your network can be "dead" if the learning rate is set too high. With proper setting this is less frequently an issue.
+
+*** leaky RELU
+    attempt to fix the "dying ReLU". Instead of the f being zero when x < 0, it will instead have a small negative slope. Some success with this function, but the results are not always consistent.
+*** Maxout
+    Doesnt have the functional form f(wx + b). A non-linearity is applied on the dot product between w and x.
+    Computes max(w1x + b1, w2x + b2). ReLU and Leaky ReLU are special cases of this form. Has all the benefits of a ReLU and does not have its drawbacks.
+    However, it doubles the number of params for every single neuron.
+*** softmax: probabilities
+    - Takes vector of real-valued values and transforms it into a probability distribution
+    - prone to numeric inestability when computing. needs normalization trick
+    - the "probabilities" depend on the value of the regularization strengh \lambda
+    - has a nice simple derivative
+** Loss Functions, Cost Functions, Objective Functions
+*** mse: for regression
+    L2 squared norm, L1 norm of difference. L2 is better.
+    L2 is much harder to optimize than softmax.
+    - requires that the network outputs exactly one correct value for each input, whereas in softmax, it only matters that their output magnitudes are appropriate.
+    - L2 is less robust cuz outliers cause huge gradients.
+    - Consider binning.
+    - Applying dropout (especially in the layer right before L2 loss) is not a great idea.
+*** cross-entropy: mostly for classification
+    - Avoid the slow learning when the predicted value is very different than the real value. Because of the derivative of the function.
+    - the right cost function to use with softmax
+    - has a very big gradient when the target value is 1 and the output is almost zero. Very steep derivative when the answer is very wrong
+    - For large number of classes: *Hierarchical Softmax*. Decomposes labels into tree. Each label is a path along he tree, and softmax is trained at every node of the tree to disambiguate between branches.
+*** Attribute classification
+    when there isnt a single correct answer.
+    Build a binary classifier for every attribute independently. Or train a logistic regression classifier for every attr independently.
+** Types of Networks
+*** Fully-Connected, Dense
+    [[./imgs/fully_connected.png]]
+    In practice, it is often the case that 3-layer neural networks will outperform 2-layer nets, but going even deeper rarely helps much more. This is in contrast to Conv Nets, where depth has been found to be an extremely important component for a good recognition system.
+*** Convolutional nets
+    Assumption that inputs are images, so allows us to encode certain properties into the architecture.
+    Neurons arraged in *width, height, depth*
+    The neurons in a layer are only connected to small region of the layer before it.
+    [[./imgs/convnet.png]]
+**** Convolution layer
+     Typical filter (5x5x3). We have entire set of filters in each CONV layer (e.g. filters), and each will produce a separate 2-dimensional activation map. We will stack these maps along the depth dim and produce the output volume.
+     The network learns filters that activaate when they see some visual feature such as edges.
+***** strides
+      the number of pixels we slide the filter
+***** depth
+      number of filters to use.
+***** window size
+***** padding
+      - *zero padding*: pad the input volume with zeros around the border.
+        Allows control the spatial size of the output volumes.
+      - is common to set zero-padding looking to have and output volume of same size as input volume.
+***** spatial size of the output volume
+      how many neurons "fit" (W - F + 2P)/S+1. W=input volume size, F=field size, S=Stride, P=zero padding
+***** shared weights
+      if one feature is useful to compute at some spatial position (x,y), then it should also be useful to compute at a different pos (x2,y2). So we make each depth slice to use the same weights and bias.
+      if all neurons in a single depth slice are using the same weight vector, then the forward pass can be computed as a *convolution* of the weights with the input volume.
+      Doesnt make sense when the input images to a convnet have some specific centered structurs¡e, where we should expect that completely diff features should be learned on one side of the image than another.
+***** advantage local fields
+      We will connect each neuron to only a local region of the input volume. *Receptive field*. The connections are local in space(along width and height), but always full along the entire depth.
+***** less number of weights
+***** TODO 1x1 convolution
+***** dilation
+      filters that have spaces between each cell, called dilation. Useful in conjunction with 0-dilated filters cuz it allows you to merge spatial info across the inputs much more agressively with fewer layers.
+     For example, if you stack two 3x3 CONV layers on top of each other then you can convince yourself that the neurons on the 2nd layer are a function of a 5x5 patch of the input. If we use dilated convolutions then this effective receptive field would grow much quicker. 
+**** Pooling layer
+     Reduce spatial size to reduce amount of params and computation, and hence control overfitting.
+     The most commoon is a maxpooling of size 2x2 applied with stride of 2. The depth dimension remains unchanged.
+     Other common F = 3, S = 2 (overlapping pooling). Larger receptive fields are too destructive.
+     [[./imgs/pooling.png]]
+***** MaxPooling
+***** strides
+***** window size
+***** General Pooling
+      average pooling, l2-norm pooling. Max pooling works better in practice
+***** Getting rid of pooling
+      discard pooling in favor of repeated CONV layers. Suggest using larger stride in CONV layer once in a while.
+      Important for training good generative models. (VAEs), (GANs)
+**** Fully-Connected layer
+**** ConvNet Architectures
+***** Layer Patterns
+      most common: stack a few CONV-RELU layers, follows then with POOL layers, and repeat this until the image has been merged spatially to a small size. At some point, transition to fully-connected layers. The last fc layer holds the output.
+      INPUT -> [[CONV -> RELU]*N -> POOL?]*M -> [FC -> RELU]*K -> FC
+      N >= 0 (usually N <= 3), M >= 0, K >= 0 (usually K<3).
+      Multiple stack CONV layers are good for larger and deeper networks, because they can develop more complex features of the input volume before the destructive pooling operation.
+      - Prefer a stack of small filter CONV to one large receptive field CONV layer. For larger receptive fields the neurons would be computing a linear function over the input, while the stacks of CONV layers contain non-linearities that make their features more expressive, and with fewer parameters. The disadvantage is the need of more memory to hold all intermediate CONV layer results if we plan to do backpropagation.
+      - The conventional paradigm of a linear list of layers has recently been challenged: Google Inception and Residual Networks.
+      - *Use whatever works best on ImageNet*: Look at whatever architecture currently works best on ImageNet, download a pretrained model and finetune it on your data. You should rarely every have to train a ConvNet from scratch or design one from scratch.
+***** Layer Sizing Patterns
+      This scheme is pleasing and reduces sizing headaches.
+      - *input layer* should be divisible by 2 many times (32,64,96,224,384,512)
+      - *conv layers* small filters (3x3 at most 5x5). stride = 1 and padding with zeros trying not to alter the spatial dimensions. 
+      - *pool layers*: maxpooling with 2x2 and stride=2. This discards 75% of activations. Or 3x3 with stride 2, less common.
+      - why stride of 1 in CONV? Smaller works better in practice, and leaves the spatial down sampling to pooling, while conv layers only transform the input volume depth-wise.
+      - why padding? keep spatial size constant, and improves performance. Else, information at the borders would be "washed away" too quickly.
+      - Compromising based on memory constraints. The amount of memory can build up very quickly with the rules presented above. In practice, people prefer to make the compromise at only the first CONV layer. Like using a first CONV layer with filter sizes of 7x7 and stride of 2. AlexNet uses 11x11 and stride of 4. 
+**** TODO Inception
+*** TODO Deconvolutional networks
+*** TODO Recurrent nets
+*** Autoencoders
+    NN capable of unsupervised feature learning
+    [[./autoencoders.org][autoencoders]]
+*** TODO Boltzmann machines
+*** TODO Symmetrically connected networks. Hopfield nets.
+    like recurrent nets, but the connections between units are symmetrical (same weight in both directions)
+    Without hidden units: hopfield nets, with: Boltzmann machines
+*** TODO Networks for nlp
+**** Embeddings
+     - Function *W* that maps words to high-dimensional vectors. Usually is just a lookup table
+     - W is initialized to have random vecs for each words. It learns meaningful vectors in order to perform some task
+     - Example: predict valid 5-grams (sequences of 5 words). The model will run each word in the 5-gram through W to get a vector representing it and feed those into a module *R* that predicts its validity. For this predictions, the net needs to learn good params for *W* and *R*. The interesting part is *W*.
+     - words with similar meanings have similar vectors. allows us to generalize from one sentence to a class of similar senteces.
+     - analogies between words seem to be encoded in the difference vectors between words. Ex: male-female difference vectors:
+       W(woman) - W(man) approx eq W(aunt) - W(uncle)
+       W(woman) - W(man) approx eq W(queen) - W(king).
+       Theres probably a gender dimension, same thing for singular vs plural, and more sophisticated relationships.
+     - NN learn better ways to represent data automatically. Embeddings is an example.
+     - Can also be used to deal with the sparse matrix problem in recommender systems.
+**** t-SNE
+     For visualizing high-dimensional data. Words with similar meanings are close together.
+**** word2vec
+     unsupervised learning algo used for producing word embeddings. Two ways to implement it:
+     1. CBOW (Continuous Bag of Words): have a window around a target word and consider words around it (its context). Supply these words as input into our net and use it to try to predict the target word.
+     2. Skip-gram. Have a target word and try to predict the words in the window arount it. Predict the context around a word. Given a specific word in middle of sentence, look at the words nearby and pick one at random. The netword is going to tell us the probability for every word in out vocabulary of being the "nearby word" that we chose.
+        Feed word pairs. The network is going to learn statistics from the number of times each pairing shows up.
+        The nn does not know anything about the offset of the output word relative to the input word. It does not learn a different set of probs for the word before the input vs the word after.
+        If two diff words have very similar "context" (words around them), our model outputs similar results for these two words.
+
+     Input words are passed as one-hot vectors. Hidden-layer of linear units, then into softmax layer to make predictions. Train the hidden layer weight matrix to find efficient representations for our words. This is the *embedding* matrix. The hidden layer just operates as a lookup table. Its output is just the "word vector" for the input word.
+     
+     [[./imgs/skip_gram_net_arch.png]]
+
+     The embedding matrix has a size of the num of words by the num of neurons in the hidden layer (embed size).
+     The embed size is much smaller than the number of unique words. its a trade-off: more features->extra computation and longer run times, but allow more subtle representations, and better models.
+***** training
+      use altered version of softmax for the loss. sample n number of negative softmax units from full set and calculate the loss only with them. (tf.nn.sampled_softmax_loss). Cuz the vocabulary can be very large.
+      Adagrad instead of SGD, cuz works better when lot of variables to optimize.
+     
+**** TODO GloVe.
+     Creates embeddings by accumulating counts of co-occurrences.
+      
+*** TODO Generative Adversarial Networks (GANs)
+** TODO Improvements, Regularization
+   if you train a small network the final loss can display a good amount of variance - in some cases you get lucky and converge to a good place but in some cases you get trapped in one of the bad minima. On the other hand, if you train a large network you’ll start to find many different solutions, but the variance in the final achieved loss will be much smaller. In other words, all solutions are about equally as good, and rely less on the luck of random initialization.
+   To reiterate, the regularization strength is the preferred way to control the overfitting of a neural network.
+   The takeaway is that you should not be using smaller networks because you are afraid of overfitting. Instead, you should use as big of a neural network as your computational budget allows, and use other regularization techniques to control overfitting.
+*** L2 and L1
+    L2 is much more unforgiving than L1 when it comes to differences between vectors. L2 prefers many medium disagreements than a big one
+    - bias is not necessary to regularize, they do not control the strength of influence of an input dimension.
+    - L2 can be expected to give superior performance over L1.
+*** Max norm constraints.
+    - enforce absolute upper bounds on the magnitudes of w.
+*** Dropout
+    - Only keeping a neuron active with some probability p, or setting it to zero otherwise.
+    [[./imgs/dropout.png]]
+    During prediction, not dropping, but perform a scaling of hidden layer outputs by p. Because at test time all neurons see all their inputs, so we want the outputs of neurons at test time to be identical to their expected outputs at training time. Performing this is like computing an ensemble prediction of many sub-networks.
+    - Its preferable to use *inverted dropout*, which performs the scaling at train time, leaving the forward pass at test time untouched. P=0.5 is a reasonable default.
+*** Adding noise, transformations on the data
+*** TODO vanishing or exploding gradient
+*** moving average
+    During training, you use gradient descent to update the weights of the NN. This can be a noisy process, as sometimes the weights might move in the wrong direction (they move correctly for that particular sample, but incorrectly relating to overall performance). To limit this, you take a moving average of what the weights have been over a bunch of previous updates. This forgets old weights (when the network was poorly trained), but averages recent weights (to get rid of the noisyness).
+*** TODO weight initialization
+    - Zero initialization: every neuron gets the same output, same gradient, same update. BAD.
+    - Small random numbers: Sampled from a multi-dimensional gaussian. We want to be close to zero, but not identically to zero. Symmetry breaking.
+      - Calibrate the variances with 1/sqrt(n). n is number of inputs to the neuron. To ensure all neurons in the network initially have approximately the same output distribution and empirically improves the rate of convergence.
+      - A recent paper derives an initialization specifically for ReLU neurons that the var for neurons should be 2.0/n. *w = np.random.randn(n)*sqrt(2.0/n)* and *is the current recommendation for ReLU neurons*
+    - Sparse initialization.
+    - *Initializing biases:* common to initialize to zero. For ReLU, some people use small constant values like 0.0.1
+      *in practice* current recommendation for ReLU *w = np.random.randn(n)*sqrt(2/n)*
+    - TODO *Batch Normalization*.  Significantly more robust to bad initialization. Amounts to insert BatchNorm layer immediately after fully connected layers or conv layers, and before non-linearities.
+    - *Xavier initialization*: Helps signals reach deep into the network.
+      - If the ws start too small, then signal shrinks as it passes through each layer until it's too tiny to be useful.
+      - If ws start too large, signal grows until it's too massive to be useful.
+      - With each passing layer, we want the variance to remain the same. This helps us keep the signal from exploding to a high value or vanishing to zero. In other words, we need to initialize the weights in such a way that the variance remains the same for x and y. 
+      Xavier makes sure ws are 'just right'.
+      - Drawing the ws from a dist with zero mean and a specific variance var(W) = 2/(n_in + n_out). n_in is num of neurons feeding into it, and n_out is the num of neurons the result is fed to. The dist is usually Gaussian or uniform. Preserves also the backpropagated signal
+      - In caffe Var(W) = 1/n_in. Its easier to compute.
+      - If you look closer at the problem and ReLU activation function, you can realize that ReLU does not lead to vanishing or exploding gradients and generally, you may not use Xavier initialization with this activation function.
+      - A recent paper by He et al.[3] presents a pretty straightforward generalization of ReLU and Leaky ReLU. What is more interesting is their emphasis on the benefits of Xavier initialization even for ReLU. They re-did the derivations for ReLUs and discovered that the conditions were the same up to a factor 2. 
+But Xavier init is still good choice to init weights in your network.
+*** Gradient Check
+    comparing analytic graident to the numerical gradient. If you are developing the optimizers.
+    - Use the centered formula
+    - Use double precision
+    - Use relative error for comparison: 1e-4 > relative error is usually okay. 1e-7 and less better.
+*** Annealing the learning rate
+    - Step decay: Reduce learning rate by some factor every few epochs. The factor depends of the problem. Common heuristic: reduce the lr by a constant (e.g. 0.5) whenever the validation error stops improving.
+    - Exponential decay
+    - 1/t decay.
+    Step decay is preferable in practice. Err on the side of slower decay and train for a longer time.
+*** Second order methods
+    - involves calculating inverse Hessian Matrix.
+    - impractical because requires too much memory.
+    - To approximate the inverse Hessian. *L-BFGS*.
+    - Not common. More standard is to use SGD variants based on (Nesterov's) momentum.
+*** Hyperparameter optimization
+**** Implementation
+     have a worker that continuously samples random hyperparameters and performs the optimization. During the training, the worker will keep track of the validation performance after every epoch, and writes a model checkpoint (together with miscellaneous training statistics such as the loss over time) to a file.It is useful to include the validation performance directly in the filename, so that it is simple to inspect and sort the progress. Then there is a second program which we will call a master, which launches or kills workers across a computing cluster, and may additionally inspect the checkpoints written by workers and plot their training statistics, etc.
+**** Prefer one validation over cross-validation
+     In most cases a single validation set of respectable size substantially simplifies the code base, without the need for cross-validation with multiple folds.
+**** Hyperparameter ranges.
+     Search params on log scale. EX: learning_rate = 10**uniform(-6,1). We generate random number from a uniform dist, but then raise it to the power of 10. The same for regularization strength.
+     Learning rate and regularization strength have multiplicative effects on the training dynamics. LR multiplies the computed gradient in the update. Is much more natural to consider a range of lr multiplied or divided by some value.
+     Some params (e.g. dropout) are instead usually search in the original scale.
+**** Prefer random search to grid search.
+     More efficient and easier to implement.
+     [[./imgs/random_search.png]]
+**** Careful with best values on border.
+     You may be missing more optimal hyperparams setting beyong the search interval.
+**** Stage search from coarse to fine.
+     first search in coarse ranges, and depending on where the best results are turning up, narrow the range. Helpfull to perform initial coarse search with only 1 epoch or less. A narrower search with 5 epochs, and later a detailed search for many more epochs.
+**** Bayesian Hyperparameter Optimization
+     appropriately balance the exploration-explotation trade-off when querying the performance at different hyperparameter.
+*** Ensembles
+    Train multiple independent models, and at test time avg their predictions.
+    Take longer to evaluate.
+**** Same model, different initialization.
+**** Top models discovered using cross-validation
+**** Different checkpoints of a single model
+**** Running avg of params during training.
+*** TODO Residual Learning
+** Datasets
+*** Mnist
+*** not mnist
+*** CIFAR-10
+    60000 32x32 images divided in 10 classess. 50000 training, 10000 testing
+** Case studies, state of the art 
+*** LeNet
+    First success in using convnets.
+*** alexnet
+    winner of ImageNet challenge 2012. (top 5 error of 16%). Similar to LeNet, but deeper, bigger, and featured Conv Layers stacked on top of each other.
+*** ZF NET
+    winner of ImageNet 2013. Improvements of AlexNet by tweaking hyperparams, expanding size of the middle conv layers and making stride and filter size on first layer smaller.
+*** TODO GoogLeNet
+    Winner of ImageNet 2014. Development of /Inception Module/, reduced the num of params in the net (4M, compared to AlexNet 60M). Uses avg pooling instead of fc layers at the top of the ConvNet, eliminating params that dont matter much. Inception-v4 is the most recent following version.
+*** VGGNet
+    Pushing the depth of conv networks to 16-19 improves accuracy.
+    Uses 3x3 size filters.
+    runner-up in Imagenet challenge 2014.
+    their pretrained model is available for plug and play use in Caffe.
+    Uses more memory and params. Most of the params are in the fst fc layer. Later was found that these fc layers can be removed with no performance downgrade.
+*** TODO ResNet
+    Residual Network. Winner 2015. Features special skip connections and heavy use of *batch normalization*.
+    Also no fc layers at the end. By far state of the art model and default choice for using ConvNets in practice (as of May 10,2016). 
+*** TODO Capsule networks (CAPSNETS)
+    Aim to remedy weakness of todays machine learning systems: not good at generalizing what it learns to new scenarios, like that an object is the same when seen from a new viewpoint. 
+    Build a little more knowledge of the world into computer-vision software
+    Capsules: small groups of crude virtual neurons, are designed to track different parts of an object, and thir relative positions in space. A network of many capsules can use that awareness to understand when a new scene is in fact a different view of something it has seen before.
+    Still slow compared to existing image-recognition software.
+    Departs from the trend that humans should encode as little knowledge as possible into AI software, making them figure things out from scratch.
+
+    - It's important to understand what capsules try to solve before you delve into the details. If you look at Hinton's papers and talks, capsule is really an idea which improve upon Convnet. Hinton has two major complaints.
+    - First, the general settings of Convnet assumes that one filter is being used across different locations. This is also known as "location invariance". In this setting, the exact location of a feature doesn't matter. That has a lot to do with robust feature parameter estimation. It also drastically simplify backprop with weight sharing.
+    - But then location invariance also removes one important information of an image: the apparent location.
+    -Second assumption is max pooling. As you know, pooling usually removes a high percentage of information from the previous layer. In early architectures, usually pooling is the key to shrink the size of a representation down. Of course, later architectures had changed. But pooling is still an important component.
+    -So the design of capsule has a lot of do to tackle problems of max pooling: Instead of losing information, can we "route" pixel values from previous layer correctly so that they are in optimal use?
+*** TODO more
+** Frameworks, libraries
+*** TODO tensorflow
+*** TODO tflearn
+*** TODO keras
+*** TODO caffe
+*** TODO torch
+** Recommendations
+*** Before learning
+**** Look for correct loss at chance performance. 
+    Make sure to get the loss you expect when you initialize with small params.
+**** Increasing the regularization strength should increase the loss
+**** Overfit a tiny subset of data.
+*** Monitoring
+    Plots to get intuition about different hyperparameter settings and how they should be changed for more efficient learning.
+    X-axis should be in units of epochs. (One epoch means that every example has been seen once).
+**** Loss function
+     [[./imgs/loss_plot.png]]
+     
+    The amount of "wiggle" is related to the batch size.
+    Some people prefer to plot the loss in the log domain. If multiple cross-validated models are plotted on the same loss graph, the differences between them become more apparent.
+**** Train/Val accuracy
+     Gives you insights into the amount of overfitting.
+     [[./imgs/train_val_plot.png]]
+**** Ratio of weights updates
+     ratio of the updates magnitudes to the value magnitudes, for every set of params independently. Heuristic: somewhere around 1e-3. Lower, then learning rate is too low. Higher, then learning rate is likely too high.
+**** Activation/Gradient distributions per layer.
+     plot activation/gradient histograms for all layers of the net, and see if there are strange distributions(outputting zero, neurons saturated).
+**** First-layer visualizations
+     when working with images, plot the first-layer features visually.
+*** Trainining
+    - Optimizer: Adam, or SGD with Nesterov momentum
+    - Decay lr: Halve the lr after fixed number of epochs, or whenever the validation accuracy tops off.
+    - Search good hyperparams with random search.
+    - Form ensembles for extra performance.
+    - Monitoring
+*** Computational Considerations
+    largest bottleneck: memory.
+    - From intermediate volume sizes: the raw number of *activations* at every layer of ConvNet, and their gradients (of equal size). Most activations are in earlier layers. Kept around cuz needed for backpropagation. An implementation that runs a ConvNet only at test time could reduce this by a huge amount, only storing the current activations at any layer and discarding the prev activations on layers below
+    - From param sizes.  gradients, and step cache if using momentum, adagrad or rmsprop. The memory to store the para vector alone must usually be multiplied by a factor of at least 3.
+    - miscellaneous memory, such as image data batches, augmented versions, etc.
+    The number should be converted to GB. Take the num of values, multiply by 4 to get number of bytes (every floating point is 4 bytes, 8 for double precision), and then keep dividing by 1024 to get GB.
+    A common heuristic to "make it fit" is to decrease the batch size, since most of the memory is usually consumed by the activations.
+     

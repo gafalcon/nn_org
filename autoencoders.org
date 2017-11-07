@@ -1,0 +1,90 @@
+
+* Autoencoders
+  - Unsupervised learning
+  Network trained to copy its input to its output, with the typical purpose of dimensionality reduction.
+  Encoder function to create hidden layers which contains a code to describe the input.
+  Decoder fun reconstruct the input from the hidden layer.
+  With hidden layer smaller than input layer, it creates a compressed representation of the data.
+
+  Dimensionality reduction using AEs leads to better results than classical dimensionality reduction techniques such as PCA due to the non-linearities and the type of constraint applied.
+** Denoising autoencoders
+   Reconstruct corrupted data.
+   With stack of these, pre-train deep networks.
+   - After giving it corrupted data, force hidden layer to learn only the more robust features. The output will be a more refined version of the input data.
+   - Train: stochastically corrupting data sets and inputting them into a neural network. Randomly remove parts of the data.
+   - Pretraining.
+     A stacked denoising autoencoder is a denoising autoencoder with multiple layers, trained layer by layer, by trying to minimise the error in the layer's reconstruction compared to its input. We can learn starting weights prior the main supervised training procedure with deep learning. A regularization effect is created.
+** Variational Autoencoders
+   Consists of an encoder, a decoder and a loss function. Encoder takes images and encodes them to latent vectors following Gaussian dist.
+   Used to design generative models of data and fit them to large data-sets.
+   Used for image generation and reinforcement learning.
+   Weak assumptions and fast training via backpropagation.
+   - Fst layer is the encoder: takes input and convert to latent vector => reducing mean squared error of the input and output. The vector is latent cuz given just an output from the model, we dont know which settings of the vars in the latent vector generated this output.
+
+   - To make VAE a generative model, add constraints on the encoding net that forces it to generate latent vectors that roughly follow Gaussian dist. Allows the user to generate an output similar to the db the VAE was trained on by inputting a latent vec straight to the decoder. Problem: make the latent vars match the unit Gaussian dist as closely as possible while also accurately providing output similar to input.
+
+   - Loss term: sum of mean squared error and latent loss. Latent loss is Kullback-Liebler divergence (KL), measures how closely the vars match a unit Gaussian dist. The encoder can now be changed to generate a vec of means and a vec of stds, rather than a vec of real vars. From this KL can be calculated.
+
+   - In order to optimize the KL divergence, instead of the encoder generating a vector of real values, it will generate a vector of means and a vector of standard deviations.
+     
+   - The more efficiently we can encode the original img, the higher we can raise the std on out gaussian until it reaches one. Cuz the greater the std on the noise, the less info we have. This constraint forces the encoder to be very efficient, creating info - rich latent vars. This improves generalization.
+
+   - Since they follow encoding-decoding scheme, we can compare generated images directly to the originals, which is not possible with GAN.
+
+   - Downside: uses direct mean squared error instead of adversarial network, so the net tends to produce more blurry images.
+
+     [[./imgs/vae.jpg]]
+** Recursive Autoencoders
+   Take sequence of representation vectors, and return a useful (reduced dimensional) representation for that sequence.
+*** Vector representation for sequences
+    matrix *L* of representation vectors and ordered sequence of *m* elems, each with index *k* used to get the elem's vector representation in *L*. Using a binary vec *b*, with zero in every position except for the *kth* index. *x_i = Lb_k*
+
+    We express the ordered sequence of *m* elems as a sequence of *m* vector representations, namely (x_1,...,x_m).
+*** Unsupervised Recursive AEs
+    Binary tree structure for recursion, by introducing a number of hidden representations. Each parent node has two children. In the base case, both children are vector representations for two sequence elems *x_1* and *x_2*. In every further case, we have one child as hidden representation of the sequence so far, say *y_j*, and the next *x_i* in our sequence to be processed. Every hidden representation will have the same dimensionality as the elems of the sequence, *n*.
+
+    [[./imgs/rae.png]]
+
+    To compute parent representation *p*, we consider its childer *c_1* and *c_2*:
+    *p = f(W[c1;c2] + b)*, where *W* is a matrix of params. *f* is element-wise activation function, usually sigmoidal fun such as tanh.
+
+    We then attempt to reconstruct the children from the parent vec in a reconstruction layer.
+    *[*c_1';c_2'] = W'p + b'*
+
+    To calculate reconstruction error: Euclidean distance between children and their reconstruction.
+    We backpropagate error as usual. After computing reconstruction, if one of the children is a non-terminal node (some *y_i*), we can again compute the reconstruction error of that *y_i* using the reconstruction *c'*.
+
+    This is repeated until we have constructed the full tree, and calculated the reconstruction error for each element in the original sequence.
+*** Optimizations
+    1. Choosing good tree structure: one method is to try a greedy algorithm that tests each possibility at each step, and chooses the children nodes that give the lowest reconstruction error.
+    2. Choosing good reconstruction error. Penalize more heavily on a node that encodes lots of children, than a reconstruction error on a node that represents fewer children. Take into account the number of elements *n_1* and *n_2* underneath the child nodes *c1* and *c2* respectively.
+    3. Length normalization: the RAE may compute a hidden representation which is very small in magnitude, which will decrease reconstruction error, but is clearly undesirable as we will lose the meaning of the sequence. Force the length of each node to have length 1.
+** Sparse Autoencoders
+   Enlarges the given input's representation, using large number of hidden units. Sparsity constraint: have a large num of neurons to all have low avg output so that the neurons are inactive most of the time. 
+
+   Adds penalty to mean squared error cost function. KL divergence between the Bernoulli random variables *p_j* and *p_c*. *p_j* is the avg activation fun of all neurons, and *p_c* is a small number close to 0 (for sigmoid activation function)
+*** k-sparse autoencoder
+    Choose k neurons with the highest activation functions and ignore the others. Tune the value of k to obtain a sparsity level most suitable for our dataset. A large sparsity level would learn very local features which may not be useful for identifying handwritten digits but useful for pretraining neural nets.
+** Contractive Autoencoders
+   make the learned representation be robust towards small changes around its training examples. 
+   Adds penalty term to cost function which penalises the representation's sensitivity to the training input: Frobenius norm of the Jacobian matrix. Contains a partial derivative of the activation value of a neuron with respect to the input value. A large increase in the activation value corresponds to an increase in the Jacobian, penalising the representation.
+
+   Similar to denoising autoencoders. Both encourage robustness but denoising autoencoders encourage it with the reconstruction (f o g)(x), contractive ae do so with the encoder function f(x). This is important when relying on the robustness of the encoder function rather than the reconstruction. Denoising autoencoders also obtain robustness stochastically, by randomly adding noise to the input, while contractive aes obtain it analytically.
+** Extreme learning machine
+** Autoencoders in image processing
+we can try to visualise the input which maximises any given hidden layer neuron. This will reveal exactly what kind of input each hidden neuron is responding too, and so how the network has learned to represent the input. We can now derive a formula for generating these images. 
+We can plot x_j (the input) for each hidden layer to show what the neuron responds to from the input. In this case on a network trained on images of natural images with 100 hidden neurons can be visualised as this: 
+
+[[./imgs/example-sparse-ae-weights.png]]
+
+Each square shows the input required to activate each hidden layer neuron, we can see that the network has trained to respond strongly to straight edges of different sizes and orientations [2]. These features are not surprising as representing an image by a combination of edges is a useful representation for the real world. When trained on different images or other inputs (such as audio or some abstract input type) the network will also learn a useful representation like this. This kind of representation of images can be found in many other types of neural networks, particularly convolution neural networks as they are also tasked with processing natural image data and so develop similar latent representations of the input image
+*** Image in painting
+    Restoring lost information from images.By stacking autoencoders into multiple layers (e.g. having 2 or more layers in the encoding section of the network) this allows the network to learn more abstract features and can be trained quickly by training the first layer as an autoencoder, and then training the second layer separately before finally joining them together [5].
+
+The results of training on a 5 layer are shown below (right) with other techniques in the middle and the original and corrupted image on the left. The network has not only filled in the correct colour but has also re-established basic features such as the shape of the eye. 
+
+[[./imgs/inpainting.png]]
+** Autoencoders in NLP
+*** RAEs
+   many examples make  use of recursive aes (RAE). We have a representation for words, and want to deduce from this a representation for a sentence. We build binary structure for our sentence. Then generate sequence of hidden representations. For the first step, an ae reconstructs two 'leaf' inputs. At each further step, the autoencoder, attempts to reconstruct both the input vec and the hidden vec from the previous step. This should result in a final encoding that has been built to allow as much as possible the reconstruction of every input of the sequence.
+*** Deep Learning with Stacked AEs
