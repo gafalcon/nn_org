@@ -7,6 +7,25 @@
   With hidden layer smaller than input layer, it creates a compressed representation of the data.
 
   Dimensionality reduction using AEs leads to better results than classical dimensionality reduction techniques such as PCA due to the non-linearities and the type of constraint applied.
+
+** Difference to GANs
+   Both are generative models. AE tries to find a low-dimensional representation of the data conditioned upon a specific input (of a higher dimensio) where as GANs try to create representations that are sufficient to generalize the true data distribution conditioned upon a discriminator.
+   GANs are promising and have recently shown some awesome empirical results, but are generally known to be trickier to train (though that too looks like it's being improved upon) and are a relatively "new," albeit extremely "hot" area of research. The adversarial objective is apparently a pretty powerful one, and is suitable for sticking onto the end of the VAE.
+
+   Advantages of VAEs:
+
+   -Usually easier to train and get working. Relatively easy to implement and robust to hyperparameter choices.
+   
+   -Tractable likelihood.
+   
+   -Has an explicit inference network. So it lets us do reconstruction.
+   
+   -If the distribution p(x | z) makes conditional independence assumptions, then it might have the "blurring" effect on images and "low-pass" effect on audio.
+
+   Advantages of GANs:
+
+   -Much higher visual fidelity in generated samples.
+
 ** Denoising autoencoders
    Reconstruct corrupted data.
    With stack of these, pre-train deep networks.
@@ -39,13 +58,14 @@
 *** Vector representation for sequences
     matrix *L* of representation vectors and ordered sequence of *m* elems, each with index *k* used to get the elem's vector representation in *L*. Using a binary vec *b*, with zero in every position except for the *kth* index. *x_i = Lb_k*
 
-    We express the ordered sequence of *m* elems as a sequence of *m* vector representations, namely (x_1,...,x_m).
+    We express the ordered sequence of *m* elems as a sequence of *m* vector representations, namely (x_{1},...,x_m).
 *** Unsupervised Recursive AEs
     Binary tree structure for recursion, by introducing a number of hidden representations. Each parent node has two children. In the base case, both children are vector representations for two sequence elems *x_1* and *x_2*. In every further case, we have one child as hidden representation of the sequence so far, say *y_j*, and the next *x_i* in our sequence to be processed. Every hidden representation will have the same dimensionality as the elems of the sequence, *n*.
 
+    #+ATTR_ORG: :width 400
     [[./imgs/rae.png]]
 
-    To compute parent representation *p*, we consider its childer *c_1* and *c_2*:
+    To compute parent representation *p*, we consider its children *c_1* and *c_2*:
     *p = f(W[c1;c2] + b)*, where *W* is a matrix of params. *f* is element-wise activation function, usually sigmoidal fun such as tanh.
 
     We then attempt to reconstruct the children from the parent vec in a reconstruction layer.
@@ -88,3 +108,50 @@ The results of training on a 5 layer are shown below (right) with other techniqu
 *** RAEs
    many examples make  use of recursive aes (RAE). We have a representation for words, and want to deduce from this a representation for a sentence. We build binary structure for our sentence. Then generate sequence of hidden representations. For the first step, an ae reconstructs two 'leaf' inputs. At each further step, the autoencoder, attempts to reconstruct both the input vec and the hidden vec from the previous step. This should result in a final encoding that has been built to allow as much as possible the reconstruction of every input of the sequence.
 *** Deep Learning with Stacked AEs
+*** Bilingual representation with bag of words
+    We assume a vocabulary of size *V*. We assume a method for representing words in a vector in R^D exists.
+
+     #+ATTR_ORG: :width 400
+    [[./imgs/bow.png]]
+    For each word, we calculate its vector R^D. Define a matrix *W* of dims *DxV*. The matrix has the vec representation for each of the *V* words as its columns.
+    - using the bag of words representation *x*, we define *v* in R^v, where *v* is simply a binary vector, such that each *v_i* is 1 if the phrase contains the *ith* word of the vocabulary, or 0 otherwise.
+    - Find the encoder representation by multiplication of *v* with *W*:
+      *\phi(x) = f(Wv + b)* where *f* is a sigmoidal function.
+    - The decoder attempts to reconstruct *v* from \phi(x) :
+      *v = g(W'\phi(x) + b')*
+    - Training attempts to minimize the difference between *v* and its reconstruction. Using cross-entropy loss.
+**** Bilingual Autoencoders
+     we have set (x,y) sentence pairs in two languages *X* and *Y*. Vocabs *V_x* and *V_y*, and *W_x* and *W_y* of sizes *DV_x* and *DV_y*.
+     Then encoder produces:
+     \phi(x) = f(W_x v(x) + b)
+     \phi(y) = f(W_y v(y) + b)
+
+     Both have dimension D. The decoders are of the same form as before, but with individual params for each language.
+
+     #+ATTR_ORG: :width 400
+     [[./imgs/bae.png]]
+*** Sentiment Analysis
+**** Semi-supervised Recursive Autoencoder
+
+     #+ATTR_ORG: :width 500
+     [[./imgs/semi-supervised-rae.png]]
+     Use our recursive ae to attempt to predict a sentiment label. Predict a probability dist over the possible labels, by applying a simple softmax layer:
+
+     d(p) = softmax(W_{label P})
+
+     where *p* is a given parent vector. Returns the required probability dist estimate *d*. We calculate a cross-entropy error between *d* and *t*, the target distribution.
+***** Training
+      start with corpus of aligned (sentence, label) pairs (x,t).
+      - We take an error for each entry in the training set, calculated from the sum over the errors at the non-terminal nodes of the tree constructed by the RAE.
+        These errors are calculated by adding the reconstruction error E_rec to the cross-entropy error E_CE from the softmax regression layer.
+        Learning can be achieved by backpropagation using this cost function.
+***** Improvements
+      take into account syntax tree of phrase. These methods, usually dont involve aes!
+*** Paraphrase Detection
+**** Improving RAEs
+     1. Unfolding RAEs: asking the ae to reconstruct the entire sequence so far, and calculating the error accordingly. Captures the increased importance of a child node when this child represents a larger subtree.
+     2. Deep RAEs: allow multiple encoding layers at each node.
+     3. Using Parse Tree: Use parse tree for the given phrase as the base for our RAE structure
+** Further links
+   - [[https://www.quora.com/Can-variational-autoencoders-VAE-beat-generative-adversarial-networks-GAN-in-image-generation-or-in-doing-other-tasks-on-an-image][comparison VAE vs GAN]]
+   - 
