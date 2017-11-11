@@ -1,0 +1,10 @@
+* Recurrent Neural Networks
+  Promising solution to tackling the problem of learning sequences of info.
+  RNNs dont have to be organized in layers and directed cycles are allowed. Neurons are allowed to be connected to themselves.
+  "Backprojections": connections leading from the output units back to the hidden units.
+  They have a "memory" which captures info about what has been calculated so far.
+
+  [[./imgs/rnn.jpg]]
+
+** Unrolling
+   Write out the network for the complete sequence. If the sequence is a sentence of 5 words, the network would be unrolled into a 5-layer neural network, one layer for each word  
