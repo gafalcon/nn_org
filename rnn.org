@@ -6,5 +6,45 @@
 
   [[./imgs/rnn.jpg]]
 
+  - Recurrent nets are a type of artificial neural network designed to recognize patterns in sequences of data, such as text, genomes, handwriting, the spoken word, or numerical times series data emanating from sensors, stock markets and government agencies.
+  - They are arguably the most powerful and useful type of neural network, applicable even to images, which can be decomposed into a series of patches and treated as a sequence.
+
+  - That sequential information is preserved in the recurrent network’s hidden state, which manages to span many time steps as it cascades forward to affect the processing of each new example. It is finding correlations between events separated by many moments, and these correlations are called “long-term dependencies”, because an event downstream in time depends upon, and is a function of, one or more events that came before.
+
+  [[./imgs/recurrent_equation.png]]
+
+  - The hidden state at time step t is h_t. It is a function of the input at the same time step x_t, modified by a weight matrix W (like the one we used for feedforward nets) added to the hidden state of the previous time step h_t-1 multiplied by its own hidden-state-to-hidden-state matrix U, otherwise known as a transition matrix and similar to a Markov chain.
+
+  - The sum of the weight input and hidden state is squashed by the function φ – either a logistic sigmoid function or tanh, depending – which is a standard tool for condensing very large or very small values into a logistic space, as well as making gradients workable for backpropagation.
+
+  - Because this feedback loop occurs at every time step in the series, each hidden state contains traces not only of the previous hidden state, but also of all those that preceded h_t-1 for as long as memory can persist.
 ** Unrolling
    Write out the network for the complete sequence. If the sequence is a sentence of 5 words, the network would be unrolled into a 5-layer neural network, one layer for each word  
+
+** backpropagation through time (BPTT)
+   Recurrent networks rely on an extension of backpropagation called backpropagation through time, or BPTT. Time, in this case, is simply expressed by a well-defined, ordered series of calculations linking one time step to the next, which is all backpropagation needs to work.
+
+*** Truncated BPTT
+
+    Truncated BPTT is an approximation of full BPTT that is preferred for long sequences, since full BPTT’s forward/backward cost per parameter update becomes very high over many time steps. The downside is that the gradient can only flow back so far due to that truncation, so the network can’t learn dependencies that are as long as in full BPTT.
+
+
+*Snapsnude - 04/02/2015 10:23 pm
+muy buen video, hay mas?
+
+* Vanishing (and Exploding) Gradients
+   Recurrent nets seeking to establish connections between a final output and events many time steps before were hobbled, because it is very difficult to know how much importance to accord to remote inputs. 
+   This is partially because the information flowing through neural nets passes through many stages of multiplication.
+
+   Everyone who has studied compound interest knows that any quantity multiplied frequently by an amount slightly greater than one can become immeasurably large (indeed, that simple mathematical truth underpins network effects and inevitable social inequalities). But its inverse, multiplying by a quantity less than one, is also true. Gamblers go bankrupt fast when they win just 97 cents on every dollar they put in the slots.
+
+   Because the layers and time steps of deep neural networks relate to each other through multiplication, derivatives are susceptible to vanishing or exploding.
+
+   Below you see the effects of applying a sigmoid function over and over again. The data is flattened until, for large stretches, it has no detectable slope. This is analogous to a gradient vanishing as it passes through many layers.
+
+   #+CAPTION: vanishing gradient
+   [[./imgs/sigmoid_vanishing_gradient.png]]
+   
+** Long short-term memory units (LSTMs)
+   LSTMs help preserve the error that can be backpropagated through time and layers. By maintaining a more constant error, they allow recurrent nets to continue to learn over many time steps (over 1000), thereby opening a channel to link causes and effects remotely. 
+[[https://deeplearning4j.org/lstm.html]]
