@@ -29,10 +29,7 @@
     Truncated BPTT is an approximation of full BPTT that is preferred for long sequences, since full BPTT’s forward/backward cost per parameter update becomes very high over many time steps. The downside is that the gradient can only flow back so far due to that truncation, so the network can’t learn dependencies that are as long as in full BPTT.
 
 
-*Snapsnude - 04/02/2015 10:23 pm
-muy buen video, hay mas?
-
-* Vanishing (and Exploding) Gradients
+** Vanishing (and Exploding) Gradients
    Recurrent nets seeking to establish connections between a final output and events many time steps before were hobbled, because it is very difficult to know how much importance to accord to remote inputs. 
    This is partially because the information flowing through neural nets passes through many stages of multiplication.
 
@@ -46,5 +43,47 @@ muy buen video, hay mas?
    [[./imgs/sigmoid_vanishing_gradient.png]]
    
 ** Long short-term memory units (LSTMs)
-   LSTMs help preserve the error that can be backpropagated through time and layers. By maintaining a more constant error, they allow recurrent nets to continue to learn over many time steps (over 1000), thereby opening a channel to link causes and effects remotely. 
-[[https://deeplearning4j.org/lstm.html]]
+   LSTMs preserve the error backpropagated through time and layers. they allow recurrent nets to continue to learn over many time steps (over 1000), opening channel to link causes and effects remotely. 
+
+   Contain info outside of normal flow in a gated cell. The cell makes decisions about what to store, when to allow reads, writes erasures, via gates that open and close.
+
+   The gates are analog: element-wise multiplication by sigmoids. Differentiable, suitable for backpropagation.
+
+   The gates act on signals received blocking or passing info based on its strength and import, filter with their own sets of weights. Ws are adjusted in the learning.
+
+   [[./imgs/gers_lstm.png]]
+   
+   - The triple arrows: where info flows into the cell. The combination of present input and past cell state is fed to the cell and to the gates, to decide how the input will be handled.
+   - The black dots are the gates: decide to let new input in, erase present state, and/or let that state impact the network's output at present time step.
+
+   [[./imgs/greff_lstm_diagram.png]]
+
+   The central *plus sign* in both diags is the secret of LSTMs. Helps preserve a constant error when it must be backpropagated at depth. Instead of determining the subsequent cell state by multiplying its current state with new input, they add the two.
+
+   Different weights filter the input for input, output and forgetting. Forget gate is a linear identity function. If open, the current state is simply multiplied by one.
+   *Including bias of 1 to forget gate of every LSTM cell is shown to improve performance*
+
+   RNNs can map one input to many outputs(one image to many words), many to many(translation), or many to one(classifying a voice).
+
+   You may also wonder what the precise value is of input gates that protect a memory cell from new data coming in, and output gates that prevent it from affecting certain outputs of the RNN. You can think of LSTMs as allowing a neural network to operate on different scales of time at once.
+
+*** Gated Recurrent Units (GRUs)
+    LSTMs without output gate, fully writes the contents from its memory cell to the larger net at each time step.
+
+    [[./imgs/lstm_gru.png]]
+
+
+
+*** Caracter-Level Language Models
+    we’ll give the RNN a huge chunk of text and ask it to model the probability distribution of the next character in the sequence given a sequence of previous characters. This will then allow us to generate new text one character at a time.
+
+    As a working example, suppose we only had a vocabulary of four possible letters “helo”, and wanted to train an RNN on the training sequence “hello”. This training sequence is in fact a source of 4 separate training examples: 1. The probability of “e” should be likely given the context of “h”, 2. “l” should be likely in the context of “he”, 3. “l” should also be likely given the context of “hel”, and finally 4. “o” should be likely given the context of “hell”.
+
+    encode each character into a vector using 1-of-k encoding, and feed them into the RNN one at a time. We will then observe a sequence of 4-dimensional output vectors (one dimension per character), we interpret as the confidence the RNN currently assigns to each character coming next in the sequence.
+
+    [[./imgs/charseq.jpeg]]
+
+** Links
+   - [[https://deeplearning4j.org/lstm.html]]
+   - http://karpathy.github.io/2015/05/21/rnn-effectiveness/
+   

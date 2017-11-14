@@ -103,11 +103,12 @@
     Doesnt have the functional form f(wx + b). A non-linearity is applied on the dot product between w and x.
     Computes max(w1x + b1, w2x + b2). ReLU and Leaky ReLU are special cases of this form. Has all the benefits of a ReLU and does not have its drawbacks.
     However, it doubles the number of params for every single neuron.
-*** softmax: probabilities
+*** TODO softmax: probabilities
     - Takes vector of real-valued values and transforms it into a probability distribution
     - prone to numeric inestability when computing. needs normalization trick
     - the "probabilities" depend on the value of the regularization strengh \lambda
     - has a nice simple derivative
+    - temperature?
 ** Loss Functions, Cost Functions, Objective Functions
 *** mse: for regression
     L2 squared norm, L1 norm of difference. L2 is better.
