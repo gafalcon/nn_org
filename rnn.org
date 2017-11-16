@@ -18,12 +18,15 @@
   - The sum of the weight input and hidden state is squashed by the function φ – either a logistic sigmoid function or tanh, depending – which is a standard tool for condensing very large or very small values into a logistic space, as well as making gradients workable for backpropagation.
 
   - Because this feedback loop occurs at every time step in the series, each hidden state contains traces not only of the previous hidden state, but also of all those that preceded h_t-1 for as long as memory can persist.
-** Unrolling
-   Write out the network for the complete sequence. If the sequence is a sentence of 5 words, the network would be unrolled into a 5-layer neural network, one layer for each word  
 
 ** backpropagation through time (BPTT)
+   The problem with using backpropagation here is that we have cyclical dependencies. In feed forward nets,we calculated error with respect to the weights in one layer, we could express them in terms of the error derivatives from the layer above. 
    Recurrent networks rely on an extension of backpropagation called backpropagation through time, or BPTT. Time, in this case, is simply expressed by a well-defined, ordered series of calculations linking one time step to the next, which is all backpropagation needs to work.
 
+   take RNNs inputs, outputs, and hidden units and replicate it for every time step, corresponding to layers in our new ffnn. If the original RNN has a connection of w from neuron i to j, in our ffnn, we draw a connection of w from neuron i in every layer t_k to neuron j in evey layer t_k+1. 
+*** Unrolling
+    Write out the network for the complete sequence. If the sequence is a sentence of 5 words, the network would be unrolled into a 5-layer neural network, one layer for each word  
+    Convert our RNN into a new structure that's essentially a feed-forward neural network! 
 *** Truncated BPTT
 
     Truncated BPTT is an approximation of full BPTT that is preferred for long sequences, since full BPTT’s forward/backward cost per parameter update becomes very high over many time steps. The downside is that the gradient can only flow back so far due to that truncation, so the network can’t learn dependencies that are as long as in full BPTT.
