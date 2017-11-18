@@ -20,6 +20,8 @@
   - Because this feedback loop occurs at every time step in the series, each hidden state contains traces not only of the previous hidden state, but also of all those that preceded h_t-1 for as long as memory can persist.
 
   - All recurrent neural networks have the form of a chain of repeating modules of neural network. In standard RNNs, this repeating module will have a very simple structure, such as a single tanh layer.
+
+    #+ATTR_ORG: :width 500
     [[./imgs/simpleRNN.png]]
 
 
@@ -34,13 +36,13 @@
     Write out the network for the complete sequence. If the sequence is a sentence of 5 words, the network would be unrolled into a 5-layer neural network, one layer for each word  
     Convert our RNN into a new structure that's essentially a feed-forward neural network! 
 
+    #+ATTR_ORG: :width 500
     [[./imgs/RNN-unrolled.png]]
 
 *** Truncated BPTT
 
     Truncated BPTT is an approximation of full BPTT that is preferred for long sequences, since full BPTT’s forward/backward cost per parameter update becomes very high over many time steps. The downside is that the gradient can only flow back so far due to that truncation, so the network can’t learn dependencies that are as long as in full BPTT.
 
-    
 ** Vanishing (and Exploding) Gradients
    Recurrent nets seeking to establish connections between a final output and events many time steps before were hobbled, because it is very difficult to know how much importance to accord to remote inputs. 
    This is partially because the information flowing through neural nets passes through many stages of multiplication.
@@ -63,11 +65,13 @@
 
    The gates act on signals received blocking or passing info based on its strength and import, filter with their own sets of weights. Ws are adjusted in the learning.
 
+   #+ATTR_ORG: :width 500
    [[./imgs/gers_lstm.png]]
    
    - The triple arrows: where info flows into the cell. The combination of present input and past cell state is fed to the cell and to the gates, to decide how the input will be handled.
    - The black dots are the gates: decide to let new input in, erase present state, and/or let that state impact the network's output at present time step.
-
+     
+   #+ATTR_ORG: :width 700
    [[./imgs/greff_lstm_diagram.png]]
 
    The central *plus sign* in both diags is the secret of LSTMs. Helps preserve a constant error when it must be backpropagated at depth. Instead of determining the subsequent cell state by multiplying its current state with new input, they add the two.
@@ -78,46 +82,61 @@
    RNNs can map one input to many outputs(one image to many words), many to many(translation), or many to one(classifying a voice).
 
    You may also wonder what the precise value is of input gates that protect a memory cell from new data coming in, and output gates that prevent it from affecting certain outputs of the RNN. You can think of LSTMs as allowing a neural network to operate on different scales of time at once.
-
+  
+   #+ATTR_ORG: :width 500
    [[./imgs/lstm_chain.png]]
+
+   #+ATTR_ORG: :width 500
    [[./imgs/lstm_notation.png]]
 
    Each line carries a vector, from output of a node to inputs of others. The pink circle are pointwise operations(vec additions, etc), yellow boxes are learned neural net layers. Lines merging: concatenation, while forking: content being copied and going to diff locations.
 
 *** Core idea behind LSTMs
     The key: cell state, the line running at the top of the diagram. The LSTM has the ability to remove or add info to the cell state, by structures called gates. Gates are composed out of sigmoid neural net layer and a pointwise multiplication operation.
+
+   #+ATTR_ORG: :width 500
     [[./imgs/lstm_c_line.png]]
+
+   #+ATTR_ORG: :width 100
     [[./imgs/lstm_gate.png]]
 
 *** LSTM step-by-step
     1. Decide what info to throw away from cell state. *Forget gate layer*. Looks at h_{t-1} and x_t, outputs num between 0 and 1 for each num in cell state C_{t-1}. For ex: when we see a new subject, we want to forget the gender of the old subject, to select correct pronouns.
+       #+ATTR_ORG: :width 500
        [[./imgs/lstm_forget_gate.png]]
-    2. Decide what info to store in cell state.
+    3. Decide what info to store in cell state.
        1. *Input gate layer*: sigmoid decides which values update
        2. a tanh layer creates vec of new candidate values, *C_t*, that could be added.
        3. Combine the two to create update to state.
+       #+ATTR_ORG: :width 500
        [[./imgs/lstm_input_gate.png]]
-    3. Update old state to new cell state C_t. Multiply old state by f_t, forgetting. Then add i_t*C_t. This is the new candidate values, scaled by how much decided to update each val.
+    4. Update old state to new cell state C_t. Multiply old state by f_t, forgetting. Then add i_t*C_t. This is the new candidate values, scaled by how much decided to update each val.
+       #+ATTR_ORG: :width 500
        [[./imgs/lstm_update_state.png]]
-    4. Decide what to output. Based on filtered cell state. Sigmoid layer to decide what part to output. then put cell state through *tanh* (vals between -1 and 1) and multiply by the output of sigmoid gate.
+    5. Decide what to output. Based on filtered cell state. Sigmoid layer to decide what part to output. then put cell state through *tanh* (vals between -1 and 1) and multiply by the output of sigmoid gate.
+       #+ATTR_ORG: :width 500
        [[./imgs/lstm_output.png]]
     
 *** Variants of LSTMs
     Findings show that they're all about the same. Some worked better on certain tasks.
 **** Adding "peephole connections"
      We let gate layers look at the cell state.
+     #+ATTR_ORG: :width 500
      [[./imgs/lstm_peepholes.png]]
 
 **** Use coupled forget and input gates.
      Only forget when we're going to input something in its place. We only input new vals to the state when we forget something older.
+     #+ATTR_ORG: :width 500
      [[./imgs/lstm_var_tied.png]]
     
 **** Gated Recurrent Units (GRUs)
     LSTMs without output gate, fully writes the contents from its memory cell to the larger net at each time step.
     Combines forget and input gate into single "update gate". Also merges the cell state and hidden state.
 
+    #+ATTR_ORG: :width 500
     [[./imgs/lstm_gru.png]]
     Simpler than standard LSTM, growing increasingly popular.
+    #+ATTR_ORG: :width 500
    [[./imgs/lstm_var_gru.png]] 
 
 
@@ -128,10 +147,13 @@
 
     encode each character into a vector using 1-of-k encoding, and feed them into the RNN one at a time. We will then observe a sequence of 4-dimensional output vectors (one dimension per character), we interpret as the confidence the RNN currently assigns to each character coming next in the sequence.
 
+    #+ATTR_ORG: :width 500
     [[./imgs/charseq.jpeg]]
-
+    
 ** Links
    - [[https://deeplearning4j.org/lstm.html]]
    - http://karpathy.github.io/2015/05/21/rnn-effectiveness
    - [[https://colah.github.io/posts/2015-08-Understanding-LSTMs/]]
+   - http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduction-to-rnns/
    
+     
