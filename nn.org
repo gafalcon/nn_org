@@ -394,3 +394,4 @@ But Xavier init is still good choice to init weights in your network.
     The number should be converted to GB. Take the num of values, multiply by 4 to get number of bytes (every floating point is 4 bytes, 8 for double precision), and then keep dividing by 1024 to get GB.
     A common heuristic to "make it fit" is to decrease the batch size, since most of the memory is usually consumed by the activations.
      
+    

@@ -1,3 +1,4 @@
+#+Title: Recurrent Neural Networks
 * Recurrent Neural Networks
   Promising solution to tackling the problem of learning sequences of info.
   RNNs dont have to be organized in layers and directed cycles are allowed. Neurons are allowed to be connected to themselves.
@@ -129,8 +130,8 @@
     encode each character into a vector using 1-of-k encoding, and feed them into the RNN one at a time. We will then observe a sequence of 4-dimensional output vectors (one dimension per character), we interpret as the confidence the RNN currently assigns to each character coming next in the sequence.
 
     [[./imgs/charseq.jpeg]]
-
-** Links
+    
+** References
    - [[https://deeplearning4j.org/lstm.html]]
    - http://karpathy.github.io/2015/05/21/rnn-effectiveness
    - [[https://colah.github.io/posts/2015-08-Understanding-LSTMs/]]
