@@ -395,3 +395,7 @@ But Xavier init is still good choice to init weights in your network.
     A common heuristic to "make it fit" is to decrease the batch size, since most of the memory is usually consumed by the activations.
      
     
+    - [[https://towardsdatascience.com/deep-learning-tips-and-tricks-1ef708ec5f53][Tips and tricks]]
+    - [[http://introtodeeplearning.com/][Intro Deep Learning MIT]]
+
+
