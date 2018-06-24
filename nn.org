@@ -327,7 +327,7 @@ But Xavier init is still good choice to init weights in your network.
     winner of ImageNet challenge 2012. (top 5 error of 16%). Similar to LeNet, but deeper, bigger, and featured Conv Layers stacked on top of each other.
 *** ZF NET
     winner of ImageNet 2013. Improvements of AlexNet by tweaking hyperparams, expanding size of the middle conv layers and making stride and filter size on first layer smaller.
-*** TODO GoogLeNet
+*** GoogLeNet
     Winner of ImageNet 2014. Development of /Inception Module/, reduced the num of params in the net (4M, compared to AlexNet 60M). Uses avg pooling instead of fc layers at the top of the ConvNet, eliminating params that dont matter much. Inception-v4 is the most recent following version.
 *** VGGNet
     Pushing the depth of conv networks to 16-19 improves accuracy.
@@ -335,9 +335,38 @@ But Xavier init is still good choice to init weights in your network.
     runner-up in Imagenet challenge 2014.
     their pretrained model is available for plug and play use in Caffe.
     Uses more memory and params. Most of the params are in the fst fc layer. Later was found that these fc layers can be removed with no performance downgrade.
-*** TODO ResNet
+*** ResNet
     Residual Network. Winner 2015. Features special skip connections and heavy use of *batch normalization*.
     Also no fc layers at the end. By far state of the art model and default choice for using ConvNets in practice (as of May 10,2016). 
+    
+    Why do very deep nets perform worse as you keep adding layers? The authors The authors of ResNet boiled these problems down to a single hypothesis: direct mappings are hard to learn. And they proposed a fix: instead of trying to learn an underlying mapping from x to H(x), learn the difference between the two, or the “residual.” Then, to calculate H(x), we can just add the residual to the input.
+
+    Say the residual is F(x)=H(x)-x. Now, instead of trying to learn H(x) directly, our nets are trying to learn F(x)+x.
+
+    Each “block” in ResNet consists of a series of layers and a “shortcut” connection adding the input of the block to its output. The “add” operation is performed element-wise, and if the input and output are of different sizes, zero-padding or projections (via 1x1 convolutions) can be used to create matching dimensions.
+
+    [[./imgs/resnet.jpeg]]
+
+    Because the gradient signal in ResNets could travel back directly to early layers via shortcut connections, we could suddenly build 50-layer, 101-layer, 152-layer, and even (apparently) 1000+ layer nets that still performed well. At the time, this was a huge leap forward from the previous state-of-the-art
+
+*** Inception 
+    How can we scale up neural nets without increasing computational cost? Using new building block for deep nets, known as "Inception module". This module is the product of 2 key insights.
+
+    In a traditional conv net, each layer extracts information from previous layer to transform the input data into a more useful representation. Each layer type extracts a different kind of information. The output of a 5x5 conv kernel tells something different of the output of 3x3 conv kernel, which is different from the output of a max-pooling kernel, and so on. At any given layer, how do we know what transformation provides the most “useful” information?
+
+****  Insight #1 let model choose
+     An Inception module computes multiple different transformations over the same input map in parallel, concatenating their results into a single output. In other words, for each layer, Inception does a 5x5 convolutional transformation, and a 3x3, and a max-pool. And the next layer of the model gets to decide if (and how) to use each piece of information.
+
+     [[./imgs/inception_module.jpeg]]
+
+     The increased information density of this model architecture comes with one glaring problem: we’ve drastically increased computational costs. Not only are large (e.g. 5x5) convolutional filters inherently expensive to compute, stacking multiple different filters side by side greatly increases the number of feature maps per layer.
+
+**** Insight #2
+     using 1x1 convolutions to perform dimensionality reduction. In order to solve the computational bottleneck, the authors of Inception used 1x1 convolutions to “filter” the depth of the outputs. A 1x1 convolution only looks at one value at a time, but across multiple channels, it can extract spatial information and compress it down to a lower dimension. For example, using 20 1x1 filters, an input of size 64x64x100 (with 100 feature maps) can be compressed down to 64x64x20. By reducing the number of input maps, the authors of Inception were able to stack different layer transformations in parallel, resulting in nets that were simultaneously deep (many layers) and “wide” (many parallel operations).
+     
+     [[./imgs/inception.png]]
+
+     The first version of Inception, dubbed “GoogLeNet,” was the 22-layer winner of the ILSVRC 2014 competition I mentioned earlier. Inception v2 and v3 were developed in a second paper a year later, and improved on the original in several ways — most notably by refactoring larger convolutions into consecutive smaller ones that were easier to learn. In v3, for example, the 5x5 convolution was replaced with 2 consecutive 3x3 convolutions.
 *** TODO Capsule networks (CAPSNETS)
     Aim to remedy weakness of todays machine learning systems: not good at generalizing what it learns to new scenarios, like that an object is the same when seen from a new viewpoint. 
     Build a little more knowledge of the world into computer-vision software
@@ -350,13 +379,29 @@ But Xavier init is still good choice to init weights in your network.
     - But then location invariance also removes one important information of an image: the apparent location.
     -Second assumption is max pooling. As you know, pooling usually removes a high percentage of information from the previous layer. In early architectures, usually pooling is the key to shrink the size of a representation down. Of course, later architectures had changed. But pooling is still an important component.
     -So the design of capsule has a lot of do to tackle problems of max pooling: Instead of losing information, can we "route" pixel values from previous layer correctly so that they are in optimal use?
-*** TODO more
+*** Xception
+    "Extreme inception"
+    Here’s the hypothesis: “cross-channel correlations and spatial correlations are sufficiently decoupled that it is preferable not to map them jointly.”
+    is there any reason we need to consider both the image region and the channels at the same time?
+
+    In Inception, we began separating the two slightly. We used 1x1 convolutions to project the original input into several separate, smaller input spaces, and from each of those input spaces we used a different type of filter to transform those smaller 3D blocks of data. Xception takes this one step further. Instead of partitioning input data into several compressed chunks, it maps the spatial correlations for each output channel separately, and then performs a 1x1 depthwise convolution to capture cross-channel correlation.
+    
+    #+ATTR_ORG: :width 500
+    [[./imgs/xception.jpeg]]
+
+    The author notes that this is essentially equivalent to an existing operation known as a “depthwise separable convolution,” which consists of a depthwise convolution (a spatial convolution performed independently for each channel) followed by a pointwise convolution (a 1x1 convolution across channels). We can think of this as looking for correlations across a 2D space first, followed by looking for correlations across a 1D space. Intuitively, this 2D + 1D mapping is easier to learn than a full 3D mapping.
+    
+    And it works! Xception slightly outperforms Inception v3 on the ImageNet dataset, and vastly outperforms it on a larger image classification dataset with 17,000 classes. Most importantly, it has the same number of model parameters as Inception, implying a greater computational efficiency. Xception is much newer (it came out in April 2017), but as mentioned above, its architecture is already powering Google’s mobile vision applications through MobileNet.
+*** TODO Mobilenet
+*** Bibliography
+**** [[https://towardsdatascience.com/an-intuitive-guide-to-deep-network-architectures-65fdc477db41][Intuitive guide to deep network architectures]]
 ** Frameworks, libraries
 *** TODO tensorflow
 *** TODO tflearn
 *** TODO keras
 *** TODO caffe
 *** TODO torch
+*** TODO pytorch
 ** Recommendations
 *** Before learning
 **** Look for correct loss at chance performance. 
@@ -394,3 +439,8 @@ But Xavier init is still good choice to init weights in your network.
     The number should be converted to GB. Take the num of values, multiply by 4 to get number of bytes (every floating point is 4 bytes, 8 for double precision), and then keep dividing by 1024 to get GB.
     A common heuristic to "make it fit" is to decrease the batch size, since most of the memory is usually consumed by the activations.
      
+    
+    - [[https://towardsdatascience.com/deep-learning-tips-and-tricks-1ef708ec5f53][Tips and tricks]]
+    - [[http://introtodeeplearning.com/][Intro Deep Learning MIT]]
+
+

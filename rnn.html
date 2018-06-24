@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Recurrent Neural Networks</title>
+<!-- 2018-06-13 mié 10:26 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Org-mode">
+<meta name="author" content="gabo">
+
+<link  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<style type="text/css">
+/* org mode styles on top of twbs */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-size: 18px;
+    margin-bottom: 105px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 101px;
+    background-color: #f5f5f5;
+}
+
+footer > div {
+    padding: 10px;
+}
+
+footer p {
+    margin: 0 0 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+#table-of-contents {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+blockquote p {
+    font-size: 18px;
+}
+
+pre {
+    font-size: 16px;
+}
+
+.footpara {
+    display: inline-block;
+}
+
+figcaption {
+  font-size: 16px;
+  color: #666;
+  font-style: italic;
+  padding-bottom: 15px;
+}
+
+/* from twbs docs */
+
+.bs-docs-sidebar.affix {
+    position: static;
+}
+@media (min-width: 768px) {
+    .bs-docs-sidebar {
+        padding-left: 20px;
+    }
+}
+
+/* All levels of nav */
+.bs-docs-sidebar .nav > li > a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999;
+}
+.bs-docs-sidebar .nav > li > a:hover,
+.bs-docs-sidebar .nav > li > a:focus {
+    padding-left: 19px;
+    color: #A1283B;
+    text-decoration: none;
+    background-color: transparent;
+    border-left: 1px solid #A1283B;
+}
+.bs-docs-sidebar .nav > .active > a,
+.bs-docs-sidebar .nav > .active:hover > a,
+.bs-docs-sidebar .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: bold;
+    color: #A1283B;
+    background-color: transparent;
+    border-left: 2px solid #A1283B;
+}
+
+/* Nav: second level (shown on .active) */
+.bs-docs-sidebar .nav .nav {
+    display: none; /* Hide by default, but at >768px, show it */
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav > li > a:focus {
+    padding-left: 29px;
+}
+.bs-docs-sidebar .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav > .active:focus > a {
+    padding-left: 28px;
+    font-weight: 500;
+}
+
+/* Nav: third level (shown on .active) */
+.bs-docs-sidebar .nav .nav .nav {
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 40px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav .nav > li > a:focus {
+    padding-left: 39px;
+}
+.bs-docs-sidebar .nav .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav .nav > .active:focus > a {
+    padding-left: 38px;
+    font-weight: 500;
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: 992px) {
+    .bs-docs-sidebar .nav > .active > ul {
+        display: block;
+    }
+    /* Widen the fixed sidebar */
+    .bs-docs-sidebar.affix,
+    .bs-docs-sidebar.affix-bottom {
+        width: 213px;
+    }
+    .bs-docs-sidebar.affix {
+        position: fixed; /* Undo the static from mobile first approach */
+        top: 20px;
+    }
+    .bs-docs-sidebar.affix-bottom {
+        position: absolute; /* Undo the static from mobile first approach */
+    }
+    .bs-docs-sidebar.affix .bs-docs-sidenav,.bs-docs-sidebar.affix-bottom .bs-docs-sidenav {
+        margin-top: 0;
+        margin-bottom: 0
+    }
+}
+@media (min-width: 1200px) {
+    /* Widen the fixed sidebar again */
+    .bs-docs-sidebar.affix-bottom,
+    .bs-docs-sidebar.affix {
+        width: 263px;
+    }
+}
+</style>
+<script type="text/javascript">
+$(function() {
+    'use strict';
+
+    $('.bs-docs-sidebar li').first().addClass('active');
+
+    $(document.body).scrollspy({target: '.bs-docs-sidebar'});
+
+    $('.bs-docs-sidebar').affix();
+});
+</script>
+</head>
+<body>
+<div id="content" class="container">
+<div class="row"><div class="col-md-9"><h1 class="title">Recurrent Neural Networks</h1>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Recurrent Neural Networks</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Promising solution to tackling the problem of learning sequences of info.
+RNNs dont have to be organized in layers and directed cycles are allowed. Neurons are allowed to be connected to themselves.
+"Backprojections": connections leading from the output units back to the hidden units.
+They have a "memory" which captures info about what has been calculated so far.
+</p>
+
+
+<figure>
+<p><img src="./imgs/rnn.jpg" class="img-responsive" alt="rnn.jpg">
+</p>
+</figure>
+
+<ul class="org-ul">
+<li>Recurrent nets are a type of artificial neural network designed to recognize patterns in sequences of data, such as text, genomes, handwriting, the spoken word, or numerical times series data emanating from sensors, stock markets and government agencies.
+</li>
+<li>They are arguably the most powerful and useful type of neural network, applicable even to images, which can be decomposed into a series of patches and treated as a sequence.
+</li>
+
+<li>That sequential information is preserved in the recurrent network’s hidden state, which manages to span many time steps as it cascades forward to affect the processing of each new example. It is finding correlations between events separated by many moments, and these correlations are called “long-term dependencies”, because an event downstream in time depends upon, and is a function of, one or more events that came before.
+</li>
+</ul>
+
+
+<figure>
+<p><img src="./imgs/recurrent_equation.png" class="img-responsive" alt="recurrent_equation.png">
+</p>
+</figure>
+
+<ul class="org-ul">
+<li>The hidden state at time step t is h<sub>t</sub>. It is a function of the input at the same time step x<sub>t</sub>, modified by a weight matrix W (like the one we used for feedforward nets) added to the hidden state of the previous time step h<sub>t</sub>-1 multiplied by its own hidden-state-to-hidden-state matrix U, otherwise known as a transition matrix and similar to a Markov chain.
+</li>
+
+<li>The sum of the weight input and hidden state is squashed by the function φ – either a logistic sigmoid function or tanh, depending – which is a standard tool for condensing very large or very small values into a logistic space, as well as making gradients workable for backpropagation.
+</li>
+
+<li>Because this feedback loop occurs at every time step in the series, each hidden state contains traces not only of the previous hidden state, but also of all those that preceded h<sub>t</sub>-1 for as long as memory can persist.
+</li>
+
+<li>All recurrent neural networks have the form of a chain of repeating modules of neural network. In standard RNNs, this repeating module will have a very simple structure, such as a single tanh layer.
+
+<figure>
+<p><img src="./imgs/simpleRNN.png" class="img-responsive" alt="simpleRNN.png">
+</p>
+</figure>
+</li>
+</ul>
+</div>
+
+
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> backpropagation through time (BPTT)</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+The problem with using backpropagation here is that we have cyclical dependencies. In feed forward nets,we calculated error with respect to the weights in one layer, we could express them in terms of the error derivatives from the layer above. 
+Recurrent networks rely on an extension of backpropagation called backpropagation through time, or BPTT. Time, in this case, is simply expressed by a well-defined, ordered series of calculations linking one time step to the next, which is all backpropagation needs to work.
+</p>
+
+<p>
+take RNNs inputs, outputs, and hidden units and replicate it for every time step, corresponding to layers in our new ffnn. If the original RNN has a connection of w from neuron i to j, in our ffnn, we draw a connection of w from neuron i in every layer t<sub>k</sub> to neuron j in evey layer t<sub>k</sub>+1. 
+</p>
+
+<p>
+To determine the initializations for the hidden states at time 0, we can treat the initial activities as parameters fed into the feed forward network at the lowest layer and backpropagate to determine their optimal values as well!
+</p>
+</div>
+<div id="outline-container-sec-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> Unrolling</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Write out the network for the complete sequence. If the sequence is a sentence of 5 words, the network would be unrolled into a 5-layer neural network, one layer for each word  
+Convert our RNN into a new structure that's essentially a feed-forward neural network! 
+</p>
+
+
+<figure>
+<p><img src="./imgs/RNN-unrolled.png" class="img-responsive" alt="RNN-unrolled.png">
+</p>
+</figure>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> Truncated BPTT</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Truncated BPTT is an approximation of full BPTT that is preferred for long sequences, since full BPTT’s forward/backward cost per parameter update becomes very high over many time steps. The downside is that the gradient can only flow back so far due to that truncation, so the network can’t learn dependencies that are as long as in full BPTT.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Vanishing (and Exploding) Gradients</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Recurrent nets seeking to establish connections between a final output and events many time steps before were hobbled, because it is very difficult to know how much importance to accord to remote inputs. 
+This is partially because the information flowing through neural nets passes through many stages of multiplication.
+</p>
+
+<p>
+Everyone who has studied compound interest knows that any quantity multiplied frequently by an amount slightly greater than one can become immeasurably large (indeed, that simple mathematical truth underpins network effects and inevitable social inequalities). But its inverse, multiplying by a quantity less than one, is also true. Gamblers go bankrupt fast when they win just 97 cents on every dollar they put in the slots.
+</p>
+
+<p>
+Because the layers and time steps of deep neural networks relate to each other through multiplication, derivatives are susceptible to vanishing or exploding.
+</p>
+
+<p>
+Below you see the effects of applying a sigmoid function over and over again. The data is flattened until, for large stretches, it has no detectable slope. This is analogous to a gradient vanishing as it passes through many layers.
+</p>
+
+
+<figure>
+<p><img src="./imgs/sigmoid_vanishing_gradient.png" class="img-responsive" alt="sigmoid_vanishing_gradient.png">
+</p>
+<figcaption><span class="figure-number">Figure 5:</span> vanishing gradient</figcaption>
+</figure>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Long short-term memory units (LSTMs)</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+LSTMs preserve the error backpropagated through time and layers. they allow recurrent nets to continue to learn over many time steps (over 1000), opening channel to link causes and effects remotely. 
+</p>
+
+<p>
+Contain info outside of normal flow in a gated cell. The cell makes decisions about what to store, when to allow reads, writes erasures, via gates that open and close.
+</p>
+
+<p>
+The gates are analog: element-wise multiplication by sigmoids. Differentiable, suitable for backpropagation.
+</p>
+
+<p>
+The gates act on signals received blocking or passing info based on its strength and import, filter with their own sets of weights. Ws are adjusted in the learning.
+</p>
+
+
+<figure>
+<p><img src="./imgs/gers_lstm.png" class="img-responsive" alt="gers_lstm.png">
+</p>
+</figure>
+
+<ul class="org-ul">
+<li>The triple arrows: where info flows into the cell. The combination of present input and past cell state is fed to the cell and to the gates, to decide how the input will be handled.
+</li>
+<li>The black dots are the gates: decide to let new input in, erase present state, and/or let that state impact the network's output at present time step.
+</li>
+</ul>
+
+
+<figure>
+<p><img src="./imgs/greff_lstm_diagram.png" class="img-responsive" alt="greff_lstm_diagram.png">
+</p>
+</figure>
+
+<p>
+The central <b>plus sign</b> in both diags is the secret of LSTMs. Helps preserve a constant error when it must be backpropagated at depth. Instead of determining the subsequent cell state by multiplying its current state with new input, they add the two.
+</p>
+
+<p>
+Different weights filter the input for input, output and forgetting. Forget gate is a linear identity function. If open, the current state is simply multiplied by one.
+<b>Including bias of 1 to forget gate of every LSTM cell is shown to improve performance</b>
+</p>
+
+<p>
+RNNs can map one input to many outputs(one image to many words), many to many(translation), or many to one(classifying a voice).
+</p>
+
+<p>
+You may also wonder what the precise value is of input gates that protect a memory cell from new data coming in, and output gates that prevent it from affecting certain outputs of the RNN. You can think of LSTMs as allowing a neural network to operate on different scales of time at once.
+</p>
+
+
+<figure>
+<p><img src="./imgs/lstm_chain.png" class="img-responsive" alt="lstm_chain.png">
+</p>
+</figure>
+
+
+<figure>
+<p><img src="./imgs/lstm_notation.png" class="img-responsive" alt="lstm_notation.png">
+</p>
+</figure>
+
+<p>
+Each line carries a vector, from output of a node to inputs of others. The pink circle are pointwise operations(vec additions, etc), yellow boxes are learned neural net layers. Lines merging: concatenation, while forking: content being copied and going to diff locations.
+</p>
+</div>
+
+<div id="outline-container-sec-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Core idea behind LSTMs</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+The key: cell state, the line running at the top of the diagram. The LSTM has the ability to remove or add info to the cell state, by structures called gates. Gates are composed out of sigmoid neural net layer and a pointwise multiplication operation.
+</p>
+
+
+<figure>
+<p><img src="./imgs/lstm_c_line.png" class="img-responsive" alt="lstm_c_line.png">
+</p>
+</figure>
+
+
+<figure>
+<p><img src="./imgs/lstm_gate.png" class="img-responsive" alt="lstm_gate.png">
+</p>
+</figure>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> LSTM step-by-step</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<ol class="org-ol">
+<li>Decide what info to throw away from cell state. <b>Forget gate layer</b>. Looks at h<sub>t-1</sub> and x<sub>t</sub>, outputs num between 0 and 1 for each num in cell state C<sub>t-1</sub>. For ex: when we see a new subject, we want to forget the gender of the old subject, to select correct pronouns.
+
+<figure>
+<p><img src="./imgs/lstm_forget_gate.png" class="img-responsive" alt="lstm_forget_gate.png">
+</p>
+</figure>
+</li>
+<li>Decide what info to store in cell state.
+<ol class="org-ol">
+<li><b>Input gate layer</b>: sigmoid decides which values update
+</li>
+<li>a tanh layer creates vec of new candidate values, <b>C<sub>t</sub></b>, that could be added.
+</li>
+<li>Combine the two to create update to state.
+</li>
+</ol>
+
+<figure>
+<p><img src="./imgs/lstm_input_gate.png" class="img-responsive" alt="lstm_input_gate.png">
+</p>
+</figure>
+</li>
+<li>Update old state to new cell state C<sub>t</sub>. Multiply old state by f<sub>t</sub>, forgetting. Then add i<sub>t</sub>*C<sub>t</sub>. This is the new candidate values, scaled by how much decided to update each val.
+
+<figure>
+<p><img src="./imgs/lstm_update_state.png" class="img-responsive" alt="lstm_update_state.png">
+</p>
+</figure>
+</li>
+<li>Decide what to output. Based on filtered cell state. Sigmoid layer to decide what part to output. then put cell state through <b>tanh</b> (vals between -1 and 1) and multiply by the output of sigmoid gate.
+
+<figure>
+<p><img src="./imgs/lstm_output.png" class="img-responsive" alt="lstm_output.png">
+</p>
+</figure>
+</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3"><span class="section-number-4">1.3.3</span> Variants of LSTMs</h4>
+<div class="outline-text-4" id="text-1-3-3">
+<p>
+Findings show that they're all about the same. Some worked better on certain tasks.
+</p>
+</div>
+<ol class="org-ol"><li><a id="sec-1-3-3-1" name="sec-1-3-3-1"></a>Adding "peephole connections"<br ><div class="outline-text-5" id="text-1-3-3-1">
+<p>
+We let gate layers look at the cell state.
+</p>
+
+<figure>
+<p><img src="./imgs/lstm_peepholes.png" class="img-responsive" alt="lstm_peepholes.png">
+</p>
+</figure>
+</div>
+</li>
+
+<li><a id="sec-1-3-3-2" name="sec-1-3-3-2"></a>Use coupled forget and input gates.<br ><div class="outline-text-5" id="text-1-3-3-2">
+<p>
+Only forget when we're going to input something in its place. We only input new vals to the state when we forget something older.
+</p>
+
+<figure>
+<p><img src="./imgs/lstm_var_tied.png" class="img-responsive" alt="lstm_var_tied.png">
+</p>
+</figure>
+</div>
+</li>
+
+<li><a id="sec-1-3-3-3" name="sec-1-3-3-3"></a>Gated Recurrent Units (GRUs)<br ><div class="outline-text-5" id="text-1-3-3-3">
+<p>
+LSTMs without output gate, fully writes the contents from its memory cell to the larger net at each time step.
+Combines forget and input gate into single "update gate". Also merges the cell state and hidden state.
+</p>
+
+<p>
+<img src="./imgs/lstm_gru.png" class="img-responsive" alt="lstm_gru.png">
+Simpler than standard LSTM, growing increasingly popular.
+</p>
+
+<figure>
+<p><img src="./imgs/lstm_var_gru.png" class="img-responsive" alt="lstm_var_gru.png"> 
+</p>
+</figure>
+</div>
+</li></ol>
+</div>
+
+
+<div id="outline-container-sec-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4"><span class="section-number-4">1.3.4</span> Caracter-Level Language Models</h4>
+<div class="outline-text-4" id="text-1-3-4">
+<p>
+we’ll give the RNN a huge chunk of text and ask it to model the probability distribution of the next character in the sequence given a sequence of previous characters. This will then allow us to generate new text one character at a time.
+</p>
+
+<p>
+As a working example, suppose we only had a vocabulary of four possible letters “helo”, and wanted to train an RNN on the training sequence “hello”. This training sequence is in fact a source of 4 separate training examples: 1. The probability of “e” should be likely given the context of “h”, 2. “l” should be likely in the context of “he”, 3. “l” should also be likely given the context of “hel”, and finally 4. “o” should be likely given the context of “hell”.
+</p>
+
+<p>
+encode each character into a vector using 1-of-k encoding, and feed them into the RNN one at a time. We will then observe a sequence of 4-dimensional output vectors (one dimension per character), we interpret as the confidence the RNN currently assigns to each character coming next in the sequence.
+</p>
+
+
+<figure>
+<p><img src="./imgs/charseq.jpeg" class="img-responsive" alt="charseq.jpeg">
+</p>
+</figure>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> References</h3>
+<div class="outline-text-3" id="text-1-4">
+<ul class="org-ul">
+<li><a href="https://deeplearning4j.org/lstm.html">https://deeplearning4j.org/lstm.html</a>
+</li>
+<li><a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness">http://karpathy.github.io/2015/05/21/rnn-effectiveness</a>
+</li>
+<li><a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">https://colah.github.io/posts/2015-08-Understanding-LSTMs/</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div><div class="col-md-3"><nav id="table-of-contents">
+<div id="text-table-of-contents" class="bs-docs-sidebar">
+<ul class="nav">
+<li><a href="#sec-1">1. Recurrent Neural Networks</a>
+<ul class="nav">
+<li><a href="#sec-1-1">1.1. backpropagation through time (BPTT)</a></li>
+<li><a href="#sec-1-2">1.2. Vanishing (and Exploding) Gradients</a></li>
+<li><a href="#sec-1-3">1.3. Long short-term memory units (LSTMs)</a></li>
+<li><a href="#sec-1-4">1.4. References</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+</div></div></div>
+<footer id="postamble" class="">
+<div><p class="author">Author: gabo</p>
+<p class="date">Created: 2018-06-13 mié 10:26</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.1 (<a href="http://orgmode.org">Org-mode</a> 9.1.13)</p>
+</div>
+</footer>
+</body>
+</html>
