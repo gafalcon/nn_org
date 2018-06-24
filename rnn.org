@@ -150,6 +150,11 @@
     #+ATTR_ORG: :width 500
     [[./imgs/charseq.jpeg]]
     
+** Training sequences
+*** Word sequences
+    - Prepend special start and end tokens to each sentence.
+    - Tokenize
+    - remove infrequent words
 ** Links
    - [[https://deeplearning4j.org/lstm.html]]
    - http://karpathy.github.io/2015/05/21/rnn-effectiveness
