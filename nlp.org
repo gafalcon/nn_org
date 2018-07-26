@@ -1,6 +1,6 @@
 
 * Natural Language Processing
-*** TODO Networks for nlp
+*** TODO Word Representations
 **** Embeddings
      - Function *W* that maps words to high-dimensional vectors. Usually is just a lookup table
      - W is initialized to have random vecs for each words. It learns meaningful vectors in order to perform some task
@@ -36,7 +36,7 @@
       Adagrad instead of SGD, cuz works better when lot of variables to optimize.
      
 **** GloVe.
-     /See lecture 2 of Stanford NLP course/
+     /See lecture 3 of Stanford NLP course/
 
      GloVe, coined from Global Vectors, is a model for distributed word representation. The model is an unsupervised learning algorithm for obtaining vector representations for words. Training is performed on aggregated global word-word co-occurrence statistics from a corpus, and the resulting representations showcase interesting linear substructures of the word vector space.
 
@@ -61,6 +61,8 @@
       
       *P_{ij}* is the count of how often word  i appears in context of word j. *P* is the co-occurrence matrix. *f* is a weighting function which help us to prevent learning only from extremely common word pairs. 
 
+      http://text2vec.org/glove.html
+
 ***** Matrix Factorization
       The idea then is to apply matrix factorization to approximate this matrix as depicted in the following figure.
 
@@ -69,7 +71,13 @@
       Considering the Word-Context (WC) matrix, Word-Feature (WF) matrix and Feature-Context (FC) matrix, we try to factorize WC = WF x FC, such that we we aim to reconstruct WC from WF and FC by multiplying them. For this, we typically initialize WF and FC with some random weights and attempt to multiply them to get WC’ (an approximation of WC) and measure how close it is to WC. We do this multiple times using Stochastic Gradient Descent (SGD) to minimize the error. Finally, the Word-Feature matrix (WF) gives us the word embeddings for each word where F can be preset to a specific number of dimensions. 
       https://www.kdnuggets.com/2018/04/implementing-deep-learning-methods-feature-engineering-text-data-glove.html
 
+***** Hyperparameters
+      - Dimension: best ~300, slight drop-off afterwards
+      - Window size: around 8 each center word
+
 *** References
+    - [[http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/][word2vec tutorial-skip gram]]
+    - [[http://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/][negative_sampling word2vec]]
     - [[https://www.quora.com/How-is-GloVe-different-from-word2vec][How is Glove different from word2vec]]
     - [[https://www.kdnuggets.com/2018/04/implementing-deep-learning-methods-feature-engineering-text-data-glove.html][Glove]]
-    - [[http://web.stanford.edu/class/cs224n/syllabus.html][Stanford CS224n: Natural Language Processing with deep learning]] 
+    - [[http://web.stanford.edu/class/cs224n/syllabus.html][Stanford CS224n: Natural Language Processing with deep learning]]
