@@ -43,7 +43,6 @@
 
     Truncated BPTT is an approximation of full BPTT that is preferred for long sequences, since full BPTT’s forward/backward cost per parameter update becomes very high over many time steps. The downside is that the gradient can only flow back so far due to that truncation, so the network can’t learn dependencies that are as long as in full BPTT.
 
-    
 ** Vanishing (and Exploding) Gradients
    Recurrent nets seeking to establish connections between a final output and events many time steps before were hobbled, because it is very difficult to know how much importance to accord to remote inputs. 
    This is partially because the information flowing through neural nets passes through many stages of multiplication.
@@ -66,11 +65,13 @@
 
    The gates act on signals received blocking or passing info based on its strength and import, filter with their own sets of weights. Ws are adjusted in the learning.
 
+   #+ATTR_ORG: :width 500
    [[./imgs/gers_lstm.png]]
    
    - The triple arrows: where info flows into the cell. The combination of present input and past cell state is fed to the cell and to the gates, to decide how the input will be handled.
    - The black dots are the gates: decide to let new input in, erase present state, and/or let that state impact the network's output at present time step.
-
+     
+   #+ATTR_ORG: :width 700
    [[./imgs/greff_lstm_diagram.png]]
 
    The central *plus sign* in both diags is the secret of LSTMs. Helps preserve a constant error when it must be backpropagated at depth. Instead of determining the subsequent cell state by multiplying its current state with new input, they add the two.
@@ -103,7 +104,7 @@
     1. Decide what info to throw away from cell state. *Forget gate layer*. Looks at h_{t-1} and x_t, outputs num between 0 and 1 for each num in cell state C_{t-1}. For ex: when we see a new subject, we want to forget the gender of the old subject, to select correct pronouns.
        #+ATTR_ORG: :width 700
        [[./imgs/lstm_forget_gate.png]]
-    2. Decide what info to store in cell state.
+    3. Decide what info to store in cell state.
        1. *Input gate layer*: sigmoid decides which values update
        2. a tanh layer creates vec of new candidate values, *C_t*, that could be added.
        3. Combine the two to create update to state.
@@ -149,6 +150,11 @@
     #+ATTR_ORG: :width 500
     [[./imgs/charseq.jpeg]]
     
+** Training sequences
+*** Word sequences
+    - Prepend special start and end tokens to each sentence.
+    - Tokenize
+    - remove infrequent words
 ** Augmented RNNs
 *** Neural Turing Machines
 *** Attentional Interfaces
@@ -160,4 +166,6 @@
    - [[https://deeplearning4j.org/lstm.html]]
    - http://karpathy.github.io/2015/05/21/rnn-effectiveness
    - [[https://colah.github.io/posts/2015-08-Understanding-LSTMs/]]
+   - http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduction-to-rnns/
    
+     
