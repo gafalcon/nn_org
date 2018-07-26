@@ -200,41 +200,8 @@
 *** TODO Symmetrically connected networks. Hopfield nets.
     like recurrent nets, but the connections between units are symmetrical (same weight in both directions)
     Without hidden units: hopfield nets, with: Boltzmann machines
-*** TODO Networks for nlp
-**** Embeddings
-     - Function *W* that maps words to high-dimensional vectors. Usually is just a lookup table
-     - W is initialized to have random vecs for each words. It learns meaningful vectors in order to perform some task
-     - Example: predict valid 5-grams (sequences of 5 words). The model will run each word in the 5-gram through W to get a vector representing it and feed those into a module *R* that predicts its validity. For this predictions, the net needs to learn good params for *W* and *R*. The interesting part is *W*.
-     - words with similar meanings have similar vectors. allows us to generalize from one sentence to a class of similar senteces.
-     - analogies between words seem to be encoded in the difference vectors between words. Ex: male-female difference vectors:
-       W(woman) - W(man) approx eq W(aunt) - W(uncle)
-       W(woman) - W(man) approx eq W(queen) - W(king).
-       Theres probably a gender dimension, same thing for singular vs plural, and more sophisticated relationships.
-     - NN learn better ways to represent data automatically. Embeddings is an example.
-     - Can also be used to deal with the sparse matrix problem in recommender systems.
-**** t-SNE
-     For visualizing high-dimensional data. Words with similar meanings are close together.
-**** word2vec
-     unsupervised learning algo used for producing word embeddings. Two ways to implement it:
-     1. CBOW (Continuous Bag of Words): have a window around a target word and consider words around it (its context). Supply these words as input into our net and use it to try to predict the target word.
-     2. Skip-gram. Have a target word and try to predict the words in the window arount it. Predict the context around a word. Given a specific word in middle of sentence, look at the words nearby and pick one at random. The netword is going to tell us the probability for every word in out vocabulary of being the "nearby word" that we chose.
-        Feed word pairs. The network is going to learn statistics from the number of times each pairing shows up.
-        The nn does not know anything about the offset of the output word relative to the input word. It does not learn a different set of probs for the word before the input vs the word after.
-        If two diff words have very similar "context" (words around them), our model outputs similar results for these two words.
-
-     Input words are passed as one-hot vectors. Hidden-layer of linear units, then into softmax layer to make predictions. Train the hidden layer weight matrix to find efficient representations for our words. This is the *embedding* matrix. The hidden layer just operates as a lookup table. Its output is just the "word vector" for the input word.
-     
-     [[./imgs/skip_gram_net_arch.png]]
-
-     The embedding matrix has a size of the num of words by the num of neurons in the hidden layer (embed size).
-     The embed size is much smaller than the number of unique words. its a trade-off: more features->extra computation and longer run times, but allow more subtle representations, and better models.
-***** training
-      use altered version of softmax for the loss. sample n number of negative softmax units from full set and calculate the loss only with them. (tf.nn.sampled_softmax_loss). Cuz the vocabulary can be very large.
-      Adagrad instead of SGD, cuz works better when lot of variables to optimize.
-     
-**** TODO GloVe.
-     Creates embeddings by accumulating counts of co-occurrences.
-      
+*** NLP 
+    [[./nlp.org]]
 *** TODO Generative Adversarial Networks (GANs)
 ** TODO Improvements, Regularization
    if you train a small network the final loss can display a good amount of variance - in some cases you get lucky and converge to a good place but in some cases you get trapped in one of the bad minima. On the other hand, if you train a large network you’ll start to find many different solutions, but the variance in the final achieved loss will be much smaller. In other words, all solutions are about equally as good, and rely less on the luck of random initialization.

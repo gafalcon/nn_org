@@ -1,0 +1,4 @@
+* Projects to test
+** Music generation
+** Mario-kart with RNN
+   [[https://www.polygon.com/2017/11/5/16610012/mario-kart-mariflow-neural-network-video?utm_campaign=Revue%20newsletter&utm_medium=Newsletter&utm_source=The%20Wild%20Week%20in%20AI]]

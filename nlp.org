@@ -1,0 +1,75 @@
+
+* Natural Language Processing
+*** TODO Networks for nlp
+**** Embeddings
+     - Function *W* that maps words to high-dimensional vectors. Usually is just a lookup table
+     - W is initialized to have random vecs for each words. It learns meaningful vectors in order to perform some task
+     - Example: predict valid 5-grams (sequences of 5 words). The model will run each word in the 5-gram through W to get a vector representing it and feed those into a module *R* that predicts its validity. For this predictions, the net needs to learn good params for *W* and *R*. The interesting part is *W*.
+     - words with similar meanings have similar vectors. allows us to generalize from one sentence to a class of similar senteces.
+     - analogies between words seem to be encoded in the difference vectors between words. Ex: male-female difference vectors:
+       W(woman) - W(man) approx eq W(aunt) - W(uncle)
+       W(woman) - W(man) approx eq W(queen) - W(king).
+       Theres probably a gender dimension, same thing for singular vs plural, and more sophisticated relationships.
+     - NN learn better ways to represent data automatically. Embeddings is an example.
+     - Can also be used to deal with the sparse matrix problem in recommender systems.
+**** TODO t-SNE
+     For visualizing high-dimensional data. Words with similar meanings are close together.
+**** word2vec
+     unsupervised learning algo used for producing word embeddings. Two ways to implement it:
+     1. CBOW (Continuous Bag of Words): have a window around a target word and consider words around it (its context). Supply these words as input into our net and use it to try to predict the target word.
+     2. Skip-gram. Have a target word and try to predict the words in the window arount it. Predict the context around a word. Given a specific word in middle of sentence, look at the words nearby and pick one at random. The netword is going to tell us the probability for every word in out vocabulary of being the "nearby word" that we chose.
+        Feed word pairs. The network is going to learn statistics from the number of times each pairing shows up.
+        The nn does not know anything about the offset of the output word relative to the input word. It does not learn a different set of probs for the word before the input vs the word after.
+        If two diff words have very similar "context" (words around them), our model outputs similar results for these two words.
+
+     Input words are passed as one-hot vectors. Hidden-layer of linear units, then into softmax layer to make predictions. Train the hidden layer weight matrix to find efficient representations for our words. This is the *embedding* matrix. The hidden layer just operates as a lookup table. Its output is just the "word vector" for the input word.
+     
+     [[./imgs/skip_gram_net_arch.png]]
+
+     The embedding matrix has a size of the num of words by the num of neurons in the hidden layer (embed size).
+     The embed size is much smaller than the number of unique words. its a trade-off: more features->extra computation and longer run times, but allow more subtle representations, and better models.
+
+     [[http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/][word2vec tutorial-skip gram]]
+     [[http://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/][negative_sampling word2vec]]
+***** training
+      use altered version of softmax for the loss. sample n number of negative softmax units from full set and calculate the loss only with them. (tf.nn.sampled_softmax_loss). Cuz the vocabulary can be very large.
+      Adagrad instead of SGD, cuz works better when lot of variables to optimize.
+     
+**** GloVe.
+     /See lecture 2 of Stanford NLP course/
+
+     GloVe, coined from Global Vectors, is a model for distributed word representation. The model is an unsupervised learning algorithm for obtaining vector representations for words. Training is performed on aggregated global word-word co-occurrence statistics from a corpus, and the resulting representations showcase interesting linear substructures of the word vector space.
+
+     Creates embeddings by accumulating counts of co-occurrences.
+     Count-based models learn their vectors by essentially doing dimensionality reduction on the co-occurrence counts matrix. They first construct a large matrix of (words x context) co-occurrence information, i.e. for each "word" (the rows), you count how frequently we see this word in some "context" (the columns) in a large corpus.  The number of "contexts" is of course large, since it is essentially combinatorial in size. So then they factorize this matrix to yield a lower-dimensional (word x features) matrix, where each row now yields a vector representation for each word. In general, this is done by minimizing a "reconstruction loss" which tries to find the lower-dimensional representations which can explain most of the variance in the high-dimensional data. In the specific case of GloVe, the counts matrix is preprocessed by normalizing the counts and log-smoothing them. This turns out to be A Good Thing in terms of the quality of the learned representations.
+
+     However, as pointed out, when we control for all the training hyper-parameters, the embeddings generated using the two methods tend to perform very similarly in downstream NLP tasks. The additional benefits of GloVe over word2vec is that it is easier to parallelize the implementation which means it's easier to train over more data     
+     https://www.quora.com/How-is-GloVe-different-from-word2vec
+
+
+     
+***** Intuition
+      The main intuition underlying the model is the simple observation that ratios of word-word co-occurrence probabilities have the potential for encoding some form of meaning. For example, consider the co-occurrence probabilities for target words ice and steam with various probe words from the vocabulary. Here are some actual probabilities from a 6 billion word corpus:
+
+      [[./imgs/glove_table.png]]
+
+      As one might expect, ice co-occurs more frequently with solid than it does with gas, whereas steam co-occurs more frequently with gas than it does with solid. Both words co-occur with their shared property water frequently, and both co-occur with the unrelated word fashion infrequently. Only in the ratio of probabilities does noise from non-discriminative words like water and fashion cancel out, so that large values (much greater than 1) correlate well with properties specific to ice, and small values (much less than 1) correlate well with properties specific of steam. In this way, the ratio of probabilities encodes some crude form of meaning associated with the abstract concept of thermodynamic phase.
+
+      The training objective of GloVe is to learn word vectors such that their dot product equals the logarithm of the words' probability of co-occurrence. Owing to the fact that the logarithm of a ratio equals the difference of logarithms, this objective associates (the logarithm of) ratios of co-occurrence probabilities with vector differences in the word vector space. Because these ratios can encode some form of meaning, this information gets encoded as vector differences as well. For this reason, the resulting word vectors perform very well on word analogy tasks.
+
+      [[./imgs/glove_loss_function.png]]
+      
+      *P_{ij}* is the count of how often word  i appears in context of word j. *P* is the co-occurrence matrix. *f* is a weighting function which help us to prevent learning only from extremely common word pairs. 
+
+***** Matrix Factorization
+      The idea then is to apply matrix factorization to approximate this matrix as depicted in the following figure.
+
+      [[./imgs/glove_matrix_factorization.png]]
+
+      Considering the Word-Context (WC) matrix, Word-Feature (WF) matrix and Feature-Context (FC) matrix, we try to factorize WC = WF x FC, such that we we aim to reconstruct WC from WF and FC by multiplying them. For this, we typically initialize WF and FC with some random weights and attempt to multiply them to get WC’ (an approximation of WC) and measure how close it is to WC. We do this multiple times using Stochastic Gradient Descent (SGD) to minimize the error. Finally, the Word-Feature matrix (WF) gives us the word embeddings for each word where F can be preset to a specific number of dimensions. 
+      https://www.kdnuggets.com/2018/04/implementing-deep-learning-methods-feature-engineering-text-data-glove.html
+
+*** References
+    - [[https://www.quora.com/How-is-GloVe-different-from-word2vec][How is Glove different from word2vec]]
+    - [[https://www.kdnuggets.com/2018/04/implementing-deep-learning-methods-feature-engineering-text-data-glove.html][Glove]]
+    - [[http://web.stanford.edu/class/cs224n/syllabus.html][Stanford CS224n: Natural Language Processing with deep learning]] 
