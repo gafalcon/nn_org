@@ -48,6 +48,18 @@
      - TP/(FN+TP). Proportion of positive data points correctly considered as positive, with respect to all positive points. De todos los positivos, cuantos son correctamente clasificados
 **** False Positive Rate (Specificity)
      - FP / (FP + TN). Proportion of negative points mistakenly considered as positive. with respect to all negative points. De todos los negativos, cuantos son incorrectamente clasificados.
+**** ROC curve
+     graph of model's performance at all classification thresholds. This curve plots TruePositiveRate vs FalsePositiveRate. Lowering classification threshold classifies more items as positive, thus increasing both False Positives and True Positives.
+
+     [[./imgs/metrics/roc.png]]
+
+   AUC provides an aggregate measure of performance across all possible classification thresholds. One way of interpreting AUC is as the probability that the model ranks a random positive example more highly than a random negative example. 
+   AUC ranges in value from 0 to 1. A model whose predictions are 100% wrong has an AUC of 0.0; one whose predictions are 100% correct has an AUC of 1.0.
+
+   AUC is desirable for the following two reasons:
+   - AUC is scale-invariant. It measures how well predictions are ranked, rather than their absolute values.
+   - AUC is classification-threshold-invariant. It measures the quality of the model's predictions irrespective of what classification threshold is chosen.
+
 *** F1 score.
     Harmonic Mean between precision and recall. The range for F1 Score is [0, 1]. It tells you how precise your classifier is (how many instances it classifies correctly), as well as how robust it is (it does not miss a significant number of instances).
 **** Precision
