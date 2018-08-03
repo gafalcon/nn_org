@@ -24,6 +24,10 @@
     Weights control the strength of influence of one neuron on another.
 *** backpropagation
     Way of computing gradients through recursive application of *chain rule*
+    - [[http://cs231n.stanford.edu/vecDerivs.pdf][Vec and Matrix Derivatives]]
+    - [[http://cs231n.stanford.edu/handouts/derivatives.pdf][Derivatives, Backpropagation, Vectorization]]
+    - [[https://medium.com/@karpathy/yes-you-should-understand-backprop-e2f06eab496b][Why is important to understand backprop]]
+    
 *** gradient descent
 *** perceptron
 *** sigmoid neurons

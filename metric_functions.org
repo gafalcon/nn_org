@@ -1,0 +1,79 @@
+* Metric Functions
+  To score your ml model
+** Metrics for Regression
+*** Mean Absolute Error (MAE)
+    the average of the difference between the Original Values and the Predicted Values. It gives us the measure of how far the predictions were from the actual output. However, they don’t gives us any idea of the direction of the error i.e. whether we are under predicting the data or over predicting the data. 
+    [[./imgs/metrics/mae.gif]]
+*** Mean Squared Error (MSE)
+    The advantage of MSE being that it is easier to compute the gradient, whereas Mean Absolute Error requires complicated linear programming tools to compute the gradient. As, we take square of the error, the effect of larger errors become more pronounced then smaller error, hence the model can now focus more on the larger errors.
+    [[./imgs/metrics/mse.gif]]
+*** Root Mean Square Error (RMSE)
+    the sample standard deviation of the differences between predicted values and observed values (called residuals).
+    [[./imgs/metrics/rmse.png]]
+
+    One important distinction between MAE & RMSE is that minimizing the squared error over a set of numbers results in finding its mean, and minimizing the absolute error results in finding its median. This is the reason why MAE is robust to outliers whereas RMSE is not.
+*** R^2 and adjusted R^2
+    Explains how well your selected independent variable(s) explain the variability in your dependent variable(s).
+    [[./imgs/metrics/r_square.png]]
+    The numerator is MSE ( average of the squares of the residuals) and the denominator is the variance in Y values. Higher the MSE, smaller the R_squared and poorer is the model.
+    - Just like R², adjusted R² also shows how well terms fit a curve or line but adjusts for the number of terms in a model.
+    [[./imgs/metrics/adjusted_r_square.png]]
+    where n is the total number of observations and k is the number of predictors.
+
+    - An adjusted R² will consider the marginal improvement added by an additional term in your model. So it will increase if you add the useful terms and it will decrease if you add less useful predictors. However, R² increases with increasing terms even though the model is not actually improving.
+    - the absolute value of RMSE does not actually tell how bad a model is. It can only be used to compare across two models whereas Adjusted R² easily does that. For example, if a model has adjusted R² equal to 0.05 then it is definitely poor.
+    - However, if you care only about prediction accuracy then RMSE is best. It is computationally simple, easily differentiable and present as default metric for most of the models.
+    
+    
+** Metrics for Classification
+*** Accuracy
+    Ratio of number of correct predictions to the total number of input samples.
+    - Works well only if equal number of samples for each class.
+*** Logarithmic loss (Log Loss)
+    - For multi-class classification. Penalizes false classifications.
+      [[./imgs/metrics/logloss.gif]]
+      y_{ij}: whether sample i belogs to class j or not.
+      p_{ij}: probability of sample i belonging to class j. Log(p) -> (0 if p = 1, -inf if p = 0)
+    - Range [0, inf]. Log loss nearer 0 indicates higher accuracy.
+*** Confusion Matrix
+    [[./imgs/metrics/confusion_matrix.png]]
+    - True Pos: we predicted YES and actual is YES.
+    - True Neg: pred No and actual is NO.
+    - False Pos: Pred Yes and actual NO.
+    - False Neg: pred NO and actual is YES.
+*** Area Under Curve (AUC).
+    - Used for binary classification. Probability that the classifier will rank a randomly chosen positive example higher thatn a randomly chosen negative example.
+    - AUC is the area under the curve under the curve plot of False Positive Rate vs. True Positive Rate. The greater the value , the better is the performance.
+**** True Positive Rate (Sensitivity)
+     - TP/(FN+TP). Proportion of positive data points correctly considered as positive, with respect to all positive points. De todos los positivos, cuantos son correctamente clasificados
+**** False Positive Rate (Specificity)
+     - FP / (FP + TN). Proportion of negative points mistakenly considered as positive. with respect to all negative points. De todos los negativos, cuantos son incorrectamente clasificados.
+*** F1 score.
+    Harmonic Mean between precision and recall. The range for F1 Score is [0, 1]. It tells you how precise your classifier is (how many instances it classifies correctly), as well as how robust it is (it does not miss a significant number of instances).
+**** Precision
+     number of correct positive results divided by the number of positive results predicted by the classifier. TP/(TP+FP)
+**** Recall
+     number of correct positive results divided by the number of all relevant samples (all samples that should have been identified as positive). TP/(TP+FN)
+
+    High precision but lower recall, gives you an extremely accurate, but it then misses a large number of instances that are difficult to classify. The greater the F1 Score, the better is the performance of our model. 
+    [[./imgs/metrics/f1.gif]]
+** Other metrics
+*** NLP
+**** Perplexity
+**** BLEU (Billingual Evaluation Understudy)
+     mostly used to measure the quality of machine translation with respect to the human translation. It uses a modified form of precision metric.
+     
+    Steps to compute BLEU score:
+    1. Convert the sentence into unigrams, bigrams, trigrams, and 4-grams
+    2. Compute precision for n-grams of size 1 to 4
+    3. Take the exponential of the weighted average of all those precision values
+    4. Multiply it with brevity penalty.
+    [[./imgs/metrics/bleu.png]]
+    [[./imgs/metrics/brevety.png]]
+    Here BP is the brevity penalty, r & c is the number of words in reference(orig sentence) & candidate(translated sentence) respectively.
+    [[./imgs/metrics/bleu_example.png]]
+    Brevity Penalty penalizes candidates shorter than their reference translations. With this brevity penalty in place, a high-scoring candidate translation must now match the reference in terms of length, same words and order of words.
+
+** References
+   - [[https://towardsdatascience.com/metrics-to-evaluate-your-machine-learning-algorithm-f10ba6e38234]]
+   - [[https://www.kdnuggets.com/2018/04/right-metric-evaluating-machine-learning-models-1.html]]
