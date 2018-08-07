@@ -75,9 +75,25 @@
       - Dimension: best ~300, slight drop-off afterwards
       - Window size: around 8 each center word
 
+        
+**** FastText
+     Fasttext (which is essentially an extension of word2vec model), treats each word as composed of character ngrams. So the vector for a word is made of the sum of this character n grams.
+     At each training step in FastText, the mean of the target word vector and its component n-gram vectors are used for training. The adjustment that is calculated from the error is then used uniformly to update each of the vectors that were combined to form the target. This adds a lot of additional computation to the training step. At each point, a word needs to sum and average its n-gram component parts. The trade-off is a set of word-vectors that contain embedded sub-word information. These vectors have been shown to be more accurate than Word2Vec vectors by a number of different measures
+     - Generate better word embeddings for rare words ( even if words are rare their character n grams are still shared with other words - hence the embeddings can still be good).
+     - Out of vocabulary words - they can construct the vector for a word from its character n grams even if word doesn't appear in training corpus. Both Word2vec and Glove can't.
+     - since the training is at character n-gram level, it takes longer to generate fasttext embeddings compared to word2vec 
+     - As the corpus size grows, the memory requirement grows too - the number of ngrams that get hashed into the same ngram bucket would grow.
+     - The usage of character embeddings (individual characters as opposed to n-grams) for downstream tasks have recently shown to boost the performance of those tasks compared to using word embeddings like word2vec or Glove.
+*** Seq2Seq
+
+*** Charnn
+
+*** Machine Translation
+
 *** References
     - [[http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/][word2vec tutorial-skip gram]]
     - [[http://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/][negative_sampling word2vec]]
     - [[https://www.quora.com/How-is-GloVe-different-from-word2vec][How is Glove different from word2vec]]
     - [[https://www.kdnuggets.com/2018/04/implementing-deep-learning-methods-feature-engineering-text-data-glove.html][Glove]]
     - [[http://web.stanford.edu/class/cs224n/syllabus.html][Stanford CS224n: Natural Language Processing with deep learning]]
+    - [[https://www.quora.com/What-is-the-main-difference-between-word2vec-and-fastText][Difference between word2vec and fastText]]

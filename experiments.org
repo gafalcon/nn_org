@@ -1,4 +1,24 @@
 * Projects to test
 ** Music generation
+*** TODO Find research
+*** TODO Representation of notes as vecs
+*** TODO Create embeddings for notes
+*** TODO Test different nn for music generation
 ** Mario-kart with RNN
    [[https://www.polygon.com/2017/11/5/16610012/mario-kart-mariflow-neural-network-video?utm_campaign=Revue%20newsletter&utm_medium=Newsletter&utm_source=The%20Wild%20Week%20in%20AI]]
+* Kaggle
+** TODO Salt challenge
+*** TODO Try keras baseline in pytorch
+* Study
+** TODO Orgfiles
+*** TODO Mix ml and nn org files
+*** TODO Add loss functions org file
+** TODO Pytorch
+*** TODO pytorch tutorials with nlp
+**** TODO Charnn
+** TODO Css24n NLP
+*** TODO Finish assignment 1
+** TODO Fastai dl
+** TODO Coursera
+*** TODO keep with the kaggle competition course
+*** TODO Start deep learning course

@@ -71,7 +71,7 @@
     [[./imgs/metrics/f1.gif]]
 ** Other metrics
 *** NLP
-**** Perplexity
+**** TODO Perplexity
 **** BLEU (Billingual Evaluation Understudy)
      mostly used to measure the quality of machine translation with respect to the human translation. It uses a modified form of precision metric.
      
