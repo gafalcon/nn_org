@@ -114,6 +114,7 @@
     - has a nice simple derivative
     - temperature?
 ** Loss Functions, Cost Functions, Objective Functions
+   [[./loss_functions.org]]
 *** mse: for regression
     L2 squared norm, L1 norm of difference. L2 is better.
     L2 is much harder to optimize than softmax.

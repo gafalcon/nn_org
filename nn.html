@@ -1,0 +1,1359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title></title>
+<!-- 2018-08-20 lun 10:59 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Org-mode">
+<meta name="author" content="gabo">
+
+<link  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<style type="text/css">
+/* org mode styles on top of twbs */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-size: 18px;
+    margin-bottom: 105px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 101px;
+    background-color: #f5f5f5;
+}
+
+footer > div {
+    padding: 10px;
+}
+
+footer p {
+    margin: 0 0 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+#table-of-contents {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+blockquote p {
+    font-size: 18px;
+}
+
+pre {
+    font-size: 16px;
+}
+
+.footpara {
+    display: inline-block;
+}
+
+figcaption {
+  font-size: 16px;
+  color: #666;
+  font-style: italic;
+  padding-bottom: 15px;
+}
+
+/* from twbs docs */
+
+.bs-docs-sidebar.affix {
+    position: static;
+}
+@media (min-width: 768px) {
+    .bs-docs-sidebar {
+        padding-left: 20px;
+    }
+}
+
+/* All levels of nav */
+.bs-docs-sidebar .nav > li > a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999;
+}
+.bs-docs-sidebar .nav > li > a:hover,
+.bs-docs-sidebar .nav > li > a:focus {
+    padding-left: 19px;
+    color: #A1283B;
+    text-decoration: none;
+    background-color: transparent;
+    border-left: 1px solid #A1283B;
+}
+.bs-docs-sidebar .nav > .active > a,
+.bs-docs-sidebar .nav > .active:hover > a,
+.bs-docs-sidebar .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: bold;
+    color: #A1283B;
+    background-color: transparent;
+    border-left: 2px solid #A1283B;
+}
+
+/* Nav: second level (shown on .active) */
+.bs-docs-sidebar .nav .nav {
+    display: none; /* Hide by default, but at >768px, show it */
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav > li > a:focus {
+    padding-left: 29px;
+}
+.bs-docs-sidebar .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav > .active:focus > a {
+    padding-left: 28px;
+    font-weight: 500;
+}
+
+/* Nav: third level (shown on .active) */
+.bs-docs-sidebar .nav .nav .nav {
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 40px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav .nav > li > a:focus {
+    padding-left: 39px;
+}
+.bs-docs-sidebar .nav .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav .nav > .active:focus > a {
+    padding-left: 38px;
+    font-weight: 500;
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: 992px) {
+    .bs-docs-sidebar .nav > .active > ul {
+        display: block;
+    }
+    /* Widen the fixed sidebar */
+    .bs-docs-sidebar.affix,
+    .bs-docs-sidebar.affix-bottom {
+        width: 213px;
+    }
+    .bs-docs-sidebar.affix {
+        position: fixed; /* Undo the static from mobile first approach */
+        top: 20px;
+    }
+    .bs-docs-sidebar.affix-bottom {
+        position: absolute; /* Undo the static from mobile first approach */
+    }
+    .bs-docs-sidebar.affix .bs-docs-sidenav,.bs-docs-sidebar.affix-bottom .bs-docs-sidenav {
+        margin-top: 0;
+        margin-bottom: 0
+    }
+}
+@media (min-width: 1200px) {
+    /* Widen the fixed sidebar again */
+    .bs-docs-sidebar.affix-bottom,
+    .bs-docs-sidebar.affix {
+        width: 263px;
+    }
+}
+</style>
+<script type="text/javascript">
+$(function() {
+    'use strict';
+
+    $('.bs-docs-sidebar li').first().addClass('active');
+
+    $(document.body).scrollspy({target: '.bs-docs-sidebar'});
+
+    $('.bs-docs-sidebar').affix();
+});
+</script>
+</head>
+<body>
+<div id="content" class="container">
+<div class="row"><div class="col-md-9"><h1 class="title"></h1>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Neural Networks</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Preprocessing</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Any preprocessing stats must only be computed on the training data, and then applied to the validation/test data. First split in train/val/test and then apply stats on the train data, to later apply to val and test.
+</p>
+</div>
+<div id="outline-container-sec-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> Normalization</h4>
+<div class="outline-text-4" id="text-1-1-1">
+</div><ol class="org-ol"><li><a id="sec-1-1-1-1" name="sec-1-1-1-1"></a>mean normalization, mean substraction (0 mean)<br ></li>
+<li><a id="sec-1-1-1-2" name="sec-1-1-1-2"></a>scaling (-1 , 1) (0, 1)<br ><div class="outline-text-5" id="text-1-1-1-2">
+<p>
+make all dimensions around the same scale
+In images, the range is equal for all pixels (0 to 255), so not extrictly necessary.
+</p>
+<ul class="org-ul">
+<li>divide by  its standard deviation once its been zero-centered. or
+</li>
+<li>normalize each dimension so that the min and max is -1 and 1.
+</li>
+</ul>
+
+
+<figure>
+<p><img src="./imgs/preprocessing.png" class="img-responsive" alt="preprocessing.png">
+</p>
+</figure>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> one-hot encoding</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<ul class="org-ul">
+<li>remember to check if is necessary to remove one column when hot-encoding
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3"><span class="section-number-4">1.1.3</span> PCA</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+first, center the data.
+reduce dimensionality of data, discarding dimensions along which the data has no variance
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4"><span class="section-number-4">1.1.4</span> whitening</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+if input is multivariate gaussian, then the whitened data will be a gaussian with zero mean and identity covariance matrix.
+<img src="./imgs/pca_whitening.png" class="img-responsive" alt="pca_whitening.png">
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Base</h3>
+<div class="outline-text-3" id="text-1-2">
+</div><div id="outline-container-sec-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> bias and weights</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+Weights control the strength of influence of one neuron on another.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2"><span class="section-number-4">1.2.2</span> backpropagation</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+Way of computing gradients through recursive application of <b>chain rule</b>
+</p>
+<ul class="org-ul">
+<li><a href="http://cs231n.stanford.edu/vecDerivs.pdf">Vec and Matrix Derivatives</a>
+</li>
+<li><a href="http://cs231n.stanford.edu/handouts/derivatives.pdf">Derivatives, Backpropagation, Vectorization</a>
+</li>
+<li><a href="https://medium.com/@karpathy/yes-you-should-understand-backprop-e2f06eab496b">Why is important to understand backprop</a>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3"><span class="section-number-4">1.2.3</span> gradient descent</h4>
+</div>
+<div id="outline-container-sec-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4"><span class="section-number-4">1.2.4</span> perceptron</h4>
+</div>
+<div id="outline-container-sec-1-2-5" class="outline-4">
+<h4 id="sec-1-2-5"><span class="section-number-4">1.2.5</span> sigmoid neurons</h4>
+</div>
+<div id="outline-container-sec-1-2-6" class="outline-4">
+<h4 id="sec-1-2-6"><span class="section-number-4">1.2.6</span> activation function</h4>
+<div class="outline-text-4" id="text-1-2-6">
+<p>
+Represent non linearities. Firing rate of neurons.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-2-7" class="outline-4">
+<h4 id="sec-1-2-7"><span class="section-number-4">1.2.7</span> learning rate</h4>
+<div class="outline-text-4" id="text-1-2-7">
+</div><ol class="org-ol"><li><a id="sec-1-2-7-1" name="sec-1-2-7-1"></a>variable learning rate<br ></li></ol>
+</div>
+<div id="outline-container-sec-1-2-8" class="outline-4">
+<h4 id="sec-1-2-8"><span class="section-number-4">1.2.8</span> batch size</h4>
+</div>
+<div id="outline-container-sec-1-2-9" class="outline-4">
+<h4 id="sec-1-2-9"><span class="section-number-4">1.2.9</span> num epochs</h4>
+</div>
+<div id="outline-container-sec-1-2-10" class="outline-4">
+<h4 id="sec-1-2-10"><span class="section-number-4">1.2.10</span> mini-batch gradient descent</h4>
+<div class="outline-text-4" id="text-1-2-10">
+<p>
+cuz its wasteful to compute the full loss over the entire training set in order to perform a single param update. Instead train on batches, (256 samples), each batch is used to perform a param update.
+Faster convergence.
+Size of the mini-batch is a hyperparameter. In practice uses power of 2 cuz many vectorized ops work faster that way. Not usually cross-validated.
+</p>
+</div>
+<ol class="org-ol"><li><a id="sec-1-2-10-1" name="sec-1-2-10-1"></a>Stochastic Gradient Descent (SGD)<br ><div class="outline-text-5" id="text-1-2-10-1">
+<p>
+online gradient descent. mini-batch is only single example.
+Is computationally more efficient to evaluate gradient for 100 examples, than for one example 100 times.
+</p>
+</div>
+</li></ol>
+</div>
+</div>
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Optimizers</h3>
+<div class="outline-text-3" id="text-1-3">
+</div><div id="outline-container-sec-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> GradientDescentOptimizer</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+Adam is currently recommended as the default algorithm to use, and often works slightly better than RMSProp. However, it is often also worth trying SGD+Nesterov Momentum as alternative.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> <span class="label label-default DONE">DONE</span> Momentum</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+Enjoys better convergence rates on deep networks. Almost always.
+</p>
+<ul class="org-ul">
+<li>Loss is interpreted as the height (or Potential energy <b>U</b>)of a hilly terrain. The optimization is like simulating the parameter vector (i.e. a particle) as rolling on the landscape.
+</li>
+<li>The Force on the particle <b>F</b> = - &nabla; U. The force is the negative gradient of the loss function. <b>F=ma</b> so the gradient is proportional to the acceleration of the particle. This physics view suggests an update in which the gradient directly influences the veloctiy, which in turn has an effect on the position:
+</li>
+<li>v = mu * v - learning<sub>reate</sub> * dx #integrate velocity
+</li>
+<li>x += v  # integrate position
+</li>
+<li><b>v</b> is initialized at zero.
+</li>
+<li><b>mu</b> (typical value 0.9). Called momentum, but is more like friction. Damps the velocity and reduces kinetic energy, or else the particle wouldnt stop at the bottom.
+</li>
+<li>Cross-validation: values such as [0.5, 0.9, 0.95, 0.99].
+</li>
+<li>Optimization can benefit from momentum schedules, increasing momentum. (Ex: start with 0.5 and anneal it to 0.99)
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3"><span class="section-number-4">1.3.3</span> Nesterov Momentum</h4>
+<div class="outline-text-4" id="text-1-3-3">
+<p>
+Slightly better than standard momentum.
+</p>
+<ul class="org-ul">
+<li>When param vector is at <b>x</b>, we know that momentum term alone moves the param vector by mu*v. 
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4"><span class="section-number-4">1.3.4</span> Per-parameter adaptive learning rate methods</h4>
+<div class="outline-text-4" id="text-1-3-4">
+<p>
+Each param has different learning rate.
+</p>
+</div>
+<ol class="org-ol"><li><a id="sec-1-3-4-1" name="sec-1-3-4-1"></a><span class="label label-primary TODO">TODO</span> AdaGRAD<br ><div class="outline-text-5" id="text-1-3-4-1">
+<p>
+Adaptive learning rate.
+</p>
+<ul class="org-ul">
+<li>cache += dx**2 #Gradient dx and parameter vector x
+</li>
+<li>x += - learning<sub>rate</sub> * dx / (np.sqrt(cache) + eps)
+</li>
+<li><b>cache</b> is used to normalize the param update step, element-wise.
+</li>
+<li>Weights receiving high gradients will have their effective lr reduced, whicle weights with small or infrequent updates will have their effective lr increased. <b>eps</b> prevents division by zero.
+</li>
+<li>Downside: With deep learning, the monotonic lr usually proves too aggressive and stops learning too early.
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-3-4-2" name="sec-1-3-4-2"></a>RMSprop.<br ><div class="outline-text-5" id="text-1-3-4-2">
+<p>
+Adjust Adagrad to reduce its aggresive, monotonically decreasing learning rate. Uses a moving average of squared gradients.
+</p>
+<ul class="org-ul">
+<li>cache = decay<sub>rate</sub> * cache + ( 1 - decay<sub>rate</sub>) * dx**2
+</li>
+<li>x += - learning<sub>rate</sub> * dx / (np.sqrt(cache) + eps)
+</li>
+<li><b>decay<sub>rate</sub></b> = [0.9, 0.99, 0.999].
+</li>
+<li><b>cache</b> var is "leaky". RMSProp still modulates the lr of each weight based on the magnitudes of its gradients, but unlike Adagrad the updates do not get monotonically smaller.
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-3-4-3" name="sec-1-3-4-3"></a>Adam<br ><div class="outline-text-5" id="text-1-3-4-3">
+<p>
+Like RMSProp with momentum. The "smooth" version of the gradient <b>m</b> is used instead of the raw (and perhaps) noisy gradient vector <b>dx</b>.
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-3-5" class="outline-4">
+<h4 id="sec-1-3-5"><span class="section-number-4">1.3.5</span> <span class="label label-primary TODO">TODO</span> random search</h4>
+<div class="outline-text-4" id="text-1-3-5">
+<p>
+try many different random weights and keep track of the one that works best.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-3-6" class="outline-4">
+<h4 id="sec-1-3-6"><span class="section-number-4">1.3.6</span> <span class="label label-primary TODO">TODO</span> random local search</h4>
+<div class="outline-text-4" id="text-1-3-6">
+<p>
+extend one foot in a random direction and then take a step only if it leads downhill
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Activation Functions</h3>
+<div class="outline-text-3" id="text-1-4">
+</div><div id="outline-container-sec-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1"><span class="section-number-4">1.4.1</span> linear: No activation function</h4>
+</div>
+<div id="outline-container-sec-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2"><span class="section-number-4">1.4.2</span> Sigmoid</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<p>
+Takes a real value and squashes it in the range between 0-1
+sigma = 1/1+e<sup>(-x)</sup>
+Historical, now is rarely ever used, cuz of two major drawbacks:
+</p>
+<ul class="org-ul">
+<li>Saturate and kill gradients. When the neuron saturates at either 0 or 1, the gradient is almost zero. Which makes the training very slow.
+Needs to pay extra attention to weight initialization, cuz it can saturate the neurons.
+</li>
+<li>sigmoid outputs are not zero-centered. So following layers would receive data not zero-centered. During grad descent, makes weights become all positive or negative.
+Can introduce undesirable zig-zagging in the weights updates. This problem is less severe than the saturation above.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-4-3" class="outline-4">
+<h4 id="sec-1-4-3"><span class="section-number-4">1.4.3</span> tanh</h4>
+<div class="outline-text-4" id="text-1-4-3">
+<p>
+Squashes values to the range [-1, 1]. Its activations saturate, but the output is zero-centered.
+Always preferred over sigmoids.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-4-4" class="outline-4">
+<h4 id="sec-1-4-4"><span class="section-number-4">1.4.4</span> ReLU</h4>
+<div class="outline-text-4" id="text-1-4-4">
+<ul class="org-ul">
+<li>f(x) = max(0, x)
+</li>
+<li>greatly accelerates the convergence of sgd compared to tanh/sigmoid.
+</li>
+<li>involves unexpensive operations compared to the tanh/sigmoid.
+</li>
+<li>Can "die" during training. A large gradient flowing through a ReLU could cause the weights to update in such a way that the neuron will never activate on any datapoint again. So the gradient through the unit will forever be zero. Ex: 40% of your network can be "dead" if the learning rate is set too high. With proper setting this is less frequently an issue.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4-5" class="outline-4">
+<h4 id="sec-1-4-5"><span class="section-number-4">1.4.5</span> leaky RELU</h4>
+<div class="outline-text-4" id="text-1-4-5">
+<p>
+attempt to fix the "dying ReLU". Instead of the f being zero when x &lt; 0, it will instead have a small negative slope. Some success with this function, but the results are not always consistent.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-4-6" class="outline-4">
+<h4 id="sec-1-4-6"><span class="section-number-4">1.4.6</span> Maxout</h4>
+<div class="outline-text-4" id="text-1-4-6">
+<p>
+Doesnt have the functional form f(wx + b). A non-linearity is applied on the dot product between w and x.
+Computes max(w1x + b1, w2x + b2). ReLU and Leaky ReLU are special cases of this form. Has all the benefits of a ReLU and does not have its drawbacks.
+However, it doubles the number of params for every single neuron.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-4-7" class="outline-4">
+<h4 id="sec-1-4-7"><span class="section-number-4">1.4.7</span> <span class="label label-primary TODO">TODO</span> softmax: probabilities</h4>
+<div class="outline-text-4" id="text-1-4-7">
+<ul class="org-ul">
+<li>Takes vector of real-valued values and transforms it into a probability distribution
+</li>
+<li>prone to numeric inestability when computing. needs normalization trick
+</li>
+<li>the "probabilities" depend on the value of the regularization strengh &lambda;
+</li>
+<li>has a nice simple derivative
+</li>
+<li>temperature?
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Loss Functions, Cost Functions, Objective Functions</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+<a href="./loss_functions.html">./loss_functions.html</a>
+</p>
+</div>
+<div id="outline-container-sec-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1"><span class="section-number-4">1.5.1</span> mse: for regression</h4>
+<div class="outline-text-4" id="text-1-5-1">
+<p>
+L2 squared norm, L1 norm of difference. L2 is better.
+L2 is much harder to optimize than softmax.
+</p>
+<ul class="org-ul">
+<li>requires that the network outputs exactly one correct value for each input, whereas in softmax, it only matters that their output magnitudes are appropriate.
+</li>
+<li>L2 is less robust cuz outliers cause huge gradients.
+</li>
+<li>Consider binning.
+</li>
+<li>Applying dropout (especially in the layer right before L2 loss) is not a great idea.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-5-2" class="outline-4">
+<h4 id="sec-1-5-2"><span class="section-number-4">1.5.2</span> cross-entropy: mostly for classification</h4>
+<div class="outline-text-4" id="text-1-5-2">
+<ul class="org-ul">
+<li>Avoid the slow learning when the predicted value is very different than the real value. Because of the derivative of the function.
+</li>
+<li>the right cost function to use with softmax
+</li>
+<li>has a very big gradient when the target value is 1 and the output is almost zero. Very steep derivative when the answer is very wrong
+</li>
+<li>For large number of classes: <b>Hierarchical Softmax</b>. Decomposes labels into tree. Each label is a path along he tree, and softmax is trained at every node of the tree to disambiguate between branches.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-5-3" class="outline-4">
+<h4 id="sec-1-5-3"><span class="section-number-4">1.5.3</span> Attribute classification</h4>
+<div class="outline-text-4" id="text-1-5-3">
+<p>
+when there isnt a single correct answer.
+Build a binary classifier for every attribute independently. Or train a logistic regression classifier for every attr independently.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-6" class="outline-3">
+<h3 id="sec-1-6"><span class="section-number-3">1.6</span> Types of Networks</h3>
+<div class="outline-text-3" id="text-1-6">
+</div><div id="outline-container-sec-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1"><span class="section-number-4">1.6.1</span> Fully-Connected, Dense</h4>
+<div class="outline-text-4" id="text-1-6-1">
+<p>
+<img src="./imgs/fully_connected.png" class="img-responsive" alt="fully_connected.png">
+In practice, it is often the case that 3-layer neural networks will outperform 2-layer nets, but going even deeper rarely helps much more. This is in contrast to Conv Nets, where depth has been found to be an extremely important component for a good recognition system.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2"><span class="section-number-4">1.6.2</span> Convolutional nets</h4>
+<div class="outline-text-4" id="text-1-6-2">
+<p>
+Assumption that inputs are images, so allows us to encode certain properties into the architecture.
+Neurons arraged in <b>width, height, depth</b>
+The neurons in a layer are only connected to small region of the layer before it.
+<img src="./imgs/convnet.png" class="img-responsive" alt="convnet.png">
+</p>
+</div>
+<ol class="org-ol"><li><a id="sec-1-6-2-1" name="sec-1-6-2-1"></a>Convolution layer<br ><div class="outline-text-5" id="text-1-6-2-1">
+<p>
+Typical filter (5x5x3). We have entire set of filters in each CONV layer (e.g. filters), and each will produce a separate 2-dimensional activation map. We will stack these maps along the depth dim and produce the output volume.
+The network learns filters that activaate when they see some visual feature such as edges.
+</p>
+</div>
+<ol class="org-ol"><li><a id="sec-1-6-2-1-1" name="sec-1-6-2-1-1"></a>strides<br ><div class="outline-text-6" id="text-1-6-2-1-1">
+<p>
+the number of pixels we slide the filter
+</p>
+</div>
+</li>
+<li><a id="sec-1-6-2-1-2" name="sec-1-6-2-1-2"></a>depth<br ><div class="outline-text-6" id="text-1-6-2-1-2">
+<p>
+number of filters to use.
+</p>
+</div>
+</li>
+<li><a id="sec-1-6-2-1-3" name="sec-1-6-2-1-3"></a>window size<br ></li>
+<li><a id="sec-1-6-2-1-4" name="sec-1-6-2-1-4"></a>padding<br ><div class="outline-text-6" id="text-1-6-2-1-4">
+<ul class="org-ul">
+<li><b>zero padding</b>: pad the input volume with zeros around the border.
+Allows control the spatial size of the output volumes.
+</li>
+<li>is common to set zero-padding looking to have and output volume of same size as input volume.
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-6-2-1-5" name="sec-1-6-2-1-5"></a>spatial size of the output volume<br ><div class="outline-text-6" id="text-1-6-2-1-5">
+<p>
+how many neurons "fit" (W - F + 2P)/S+1. W=input volume size, F=field size, S=Stride, P=zero padding
+</p>
+</div>
+</li>
+<li><a id="sec-1-6-2-1-6" name="sec-1-6-2-1-6"></a>shared weights<br ><div class="outline-text-6" id="text-1-6-2-1-6">
+<p>
+if one feature is useful to compute at some spatial position (x,y), then it should also be useful to compute at a different pos (x2,y2). So we make each depth slice to use the same weights and bias.
+if all neurons in a single depth slice are using the same weight vector, then the forward pass can be computed as a <b>convolution</b> of the weights with the input volume.
+Doesnt make sense when the input images to a convnet have some specific centered structurs¡e, where we should expect that completely diff features should be learned on one side of the image than another.
+</p>
+</div>
+</li>
+<li><a id="sec-1-6-2-1-7" name="sec-1-6-2-1-7"></a>advantage local fields<br ><div class="outline-text-6" id="text-1-6-2-1-7">
+<p>
+We will connect each neuron to only a local region of the input volume. <b>Receptive field</b>. The connections are local in space(along width and height), but always full along the entire depth.
+</p>
+</div>
+</li>
+<li><a id="sec-1-6-2-1-8" name="sec-1-6-2-1-8"></a>less number of weights<br ></li>
+<li><a id="sec-1-6-2-1-9" name="sec-1-6-2-1-9"></a><span class="label label-primary TODO">TODO</span> 1x1 convolution<br ></li>
+<li><a id="sec-1-6-2-1-10" name="sec-1-6-2-1-10"></a>dilation<br ><div class="outline-text-6" id="text-1-6-2-1-10">
+<p>
+ filters that have spaces between each cell, called dilation. Useful in conjunction with 0-dilated filters cuz it allows you to merge spatial info across the inputs much more agressively with fewer layers.
+For example, if you stack two 3x3 CONV layers on top of each other then you can convince yourself that the neurons on the 2nd layer are a function of a 5x5 patch of the input. If we use dilated convolutions then this effective receptive field would grow much quicker. 
+</p>
+</div>
+</li></ol>
+</li>
+<li><a id="sec-1-6-2-2" name="sec-1-6-2-2"></a>Pooling layer<br ><div class="outline-text-5" id="text-1-6-2-2">
+<p>
+Reduce spatial size to reduce amount of params and computation, and hence control overfitting.
+The most commoon is a maxpooling of size 2x2 applied with stride of 2. The depth dimension remains unchanged.
+Other common F = 3, S = 2 (overlapping pooling). Larger receptive fields are too destructive.
+<img src="./imgs/pooling.png" class="img-responsive" alt="pooling.png">
+</p>
+</div>
+<ol class="org-ol"><li><a id="sec-1-6-2-2-1" name="sec-1-6-2-2-1"></a>MaxPooling<br ></li>
+<li><a id="sec-1-6-2-2-2" name="sec-1-6-2-2-2"></a>strides<br ></li>
+<li><a id="sec-1-6-2-2-3" name="sec-1-6-2-2-3"></a>window size<br ></li>
+<li><a id="sec-1-6-2-2-4" name="sec-1-6-2-2-4"></a>General Pooling<br ><div class="outline-text-6" id="text-1-6-2-2-4">
+<p>
+average pooling, l2-norm pooling. Max pooling works better in practice
+</p>
+</div>
+</li>
+<li><a id="sec-1-6-2-2-5" name="sec-1-6-2-2-5"></a>Getting rid of pooling<br ><div class="outline-text-6" id="text-1-6-2-2-5">
+<p>
+discard pooling in favor of repeated CONV layers. Suggest using larger stride in CONV layer once in a while.
+Important for training good generative models. (VAEs), (GANs)
+</p>
+</div>
+</li></ol>
+</li>
+<li><a id="sec-1-6-2-3" name="sec-1-6-2-3"></a>Fully-Connected layer<br ></li>
+<li><a id="sec-1-6-2-4" name="sec-1-6-2-4"></a>ConvNet Architectures<br ><ol class="org-ol"><li><a id="sec-1-6-2-4-1" name="sec-1-6-2-4-1"></a>Layer Patterns<br ><div class="outline-text-6" id="text-1-6-2-4-1">
+<p>
+most common: stack a few CONV-RELU layers, follows then with POOL layers, and repeat this until the image has been merged spatially to a small size. At some point, transition to fully-connected layers. The last fc layer holds the output.
+INPUT -&gt; [[CONV -&gt; RELU]*N -&gt; POOL?]*M -&gt; [FC -&gt; RELU]*K -&gt; FC
+N &gt;= 0 (usually N &lt;= 3), M &gt;= 0, K &gt;= 0 (usually K&lt;3).
+Multiple stack CONV layers are good for larger and deeper networks, because they can develop more complex features of the input volume before the destructive pooling operation.
+</p>
+<ul class="org-ul">
+<li>Prefer a stack of small filter CONV to one large receptive field CONV layer. For larger receptive fields the neurons would be computing a linear function over the input, while the stacks of CONV layers contain non-linearities that make their features more expressive, and with fewer parameters. The disadvantage is the need of more memory to hold all intermediate CONV layer results if we plan to do backpropagation.
+</li>
+<li>The conventional paradigm of a linear list of layers has recently been challenged: Google Inception and Residual Networks.
+</li>
+<li><b>Use whatever works best on ImageNet</b>: Look at whatever architecture currently works best on ImageNet, download a pretrained model and finetune it on your data. You should rarely every have to train a ConvNet from scratch or design one from scratch.
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-6-2-4-2" name="sec-1-6-2-4-2"></a>Layer Sizing Patterns<br ><div class="outline-text-6" id="text-1-6-2-4-2">
+<p>
+This scheme is pleasing and reduces sizing headaches.
+</p>
+<ul class="org-ul">
+<li><b>input layer</b> should be divisible by 2 many times (32,64,96,224,384,512)
+</li>
+<li><b>conv layers</b> small filters (3x3 at most 5x5). stride = 1 and padding with zeros trying not to alter the spatial dimensions. 
+</li>
+<li><b>pool layers</b>: maxpooling with 2x2 and stride=2. This discards 75% of activations. Or 3x3 with stride 2, less common.
+</li>
+<li>why stride of 1 in CONV? Smaller works better in practice, and leaves the spatial down sampling to pooling, while conv layers only transform the input volume depth-wise.
+</li>
+<li>why padding? keep spatial size constant, and improves performance. Else, information at the borders would be "washed away" too quickly.
+</li>
+<li>Compromising based on memory constraints. The amount of memory can build up very quickly with the rules presented above. In practice, people prefer to make the compromise at only the first CONV layer. Like using a first CONV layer with filter sizes of 7x7 and stride of 2. AlexNet uses 11x11 and stride of 4. 
+</li>
+</ul>
+</div>
+</li></ol>
+</li>
+<li><a id="sec-1-6-2-5" name="sec-1-6-2-5"></a><span class="label label-primary TODO">TODO</span> Inception<br ></li></ol>
+</div>
+<div id="outline-container-sec-1-6-3" class="outline-4">
+<h4 id="sec-1-6-3"><span class="section-number-4">1.6.3</span> <span class="label label-primary TODO">TODO</span> Deconvolutional networks</h4>
+</div>
+<div id="outline-container-sec-1-6-4" class="outline-4">
+<h4 id="sec-1-6-4"><span class="section-number-4">1.6.4</span> <span class="label label-primary TODO">TODO</span> Recurrent nets</h4>
+</div>
+<div id="outline-container-sec-1-6-5" class="outline-4">
+<h4 id="sec-1-6-5"><span class="section-number-4">1.6.5</span> Autoencoders</h4>
+<div class="outline-text-4" id="text-1-6-5">
+<p>
+NN capable of unsupervised feature learning
+<a href="./autoencoders.html">autoencoders</a>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-6-6" class="outline-4">
+<h4 id="sec-1-6-6"><span class="section-number-4">1.6.6</span> <span class="label label-primary TODO">TODO</span> Boltzmann machines</h4>
+</div>
+<div id="outline-container-sec-1-6-7" class="outline-4">
+<h4 id="sec-1-6-7"><span class="section-number-4">1.6.7</span> <span class="label label-primary TODO">TODO</span> Symmetrically connected networks. Hopfield nets.</h4>
+<div class="outline-text-4" id="text-1-6-7">
+<p>
+like recurrent nets, but the connections between units are symmetrical (same weight in both directions)
+Without hidden units: hopfield nets, with: Boltzmann machines
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-6-8" class="outline-4">
+<h4 id="sec-1-6-8"><span class="section-number-4">1.6.8</span> NLP</h4>
+<div class="outline-text-4" id="text-1-6-8">
+<p>
+<a href="./nlp.html">./nlp.html</a>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-6-9" class="outline-4">
+<h4 id="sec-1-6-9"><span class="section-number-4">1.6.9</span> <span class="label label-primary TODO">TODO</span> Generative Adversarial Networks (GANs)</h4>
+</div>
+</div>
+<div id="outline-container-sec-1-7" class="outline-3">
+<h3 id="sec-1-7"><span class="section-number-3">1.7</span> <span class="label label-primary TODO">TODO</span> Improvements, Regularization</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
+if you train a small network the final loss can display a good amount of variance - in some cases you get lucky and converge to a good place but in some cases you get trapped in one of the bad minima. On the other hand, if you train a large network you’ll start to find many different solutions, but the variance in the final achieved loss will be much smaller. In other words, all solutions are about equally as good, and rely less on the luck of random initialization.
+To reiterate, the regularization strength is the preferred way to control the overfitting of a neural network.
+The takeaway is that you should not be using smaller networks because you are afraid of overfitting. Instead, you should use as big of a neural network as your computational budget allows, and use other regularization techniques to control overfitting.
+</p>
+</div>
+<div id="outline-container-sec-1-7-1" class="outline-4">
+<h4 id="sec-1-7-1"><span class="section-number-4">1.7.1</span> L2 and L1</h4>
+<div class="outline-text-4" id="text-1-7-1">
+<p>
+L2 is much more unforgiving than L1 when it comes to differences between vectors. L2 prefers many medium disagreements than a big one
+</p>
+<ul class="org-ul">
+<li>bias is not necessary to regularize, they do not control the strength of influence of an input dimension.
+</li>
+<li>L2 can be expected to give superior performance over L1.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-7-2" class="outline-4">
+<h4 id="sec-1-7-2"><span class="section-number-4">1.7.2</span> Max norm constraints.</h4>
+<div class="outline-text-4" id="text-1-7-2">
+<ul class="org-ul">
+<li>enforce absolute upper bounds on the magnitudes of w.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-7-3" class="outline-4">
+<h4 id="sec-1-7-3"><span class="section-number-4">1.7.3</span> Dropout</h4>
+<div class="outline-text-4" id="text-1-7-3">
+<ul class="org-ul">
+<li>Only keeping a neuron active with some probability p, or setting it to zero otherwise.
+</li>
+</ul>
+<p>
+<img src="./imgs/dropout.png" class="img-responsive" alt="dropout.png">
+During prediction, not dropping, but perform a scaling of hidden layer outputs by p. Because at test time all neurons see all their inputs, so we want the outputs of neurons at test time to be identical to their expected outputs at training time. Performing this is like computing an ensemble prediction of many sub-networks.
+</p>
+<ul class="org-ul">
+<li>Its preferable to use <b>inverted dropout</b>, which performs the scaling at train time, leaving the forward pass at test time untouched. P=0.5 is a reasonable default.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-7-4" class="outline-4">
+<h4 id="sec-1-7-4"><span class="section-number-4">1.7.4</span> Adding noise, transformations on the data</h4>
+</div>
+<div id="outline-container-sec-1-7-5" class="outline-4">
+<h4 id="sec-1-7-5"><span class="section-number-4">1.7.5</span> <span class="label label-primary TODO">TODO</span> vanishing or exploding gradient</h4>
+</div>
+<div id="outline-container-sec-1-7-6" class="outline-4">
+<h4 id="sec-1-7-6"><span class="section-number-4">1.7.6</span> moving average</h4>
+<div class="outline-text-4" id="text-1-7-6">
+<p>
+During training, you use gradient descent to update the weights of the NN. This can be a noisy process, as sometimes the weights might move in the wrong direction (they move correctly for that particular sample, but incorrectly relating to overall performance). To limit this, you take a moving average of what the weights have been over a bunch of previous updates. This forgets old weights (when the network was poorly trained), but averages recent weights (to get rid of the noisyness).
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-7-7" class="outline-4">
+<h4 id="sec-1-7-7"><span class="section-number-4">1.7.7</span> <span class="label label-primary TODO">TODO</span> weight initialization</h4>
+<div class="outline-text-4" id="text-1-7-7">
+<ul class="org-ul">
+<li>Zero initialization: every neuron gets the same output, same gradient, same update. BAD.
+</li>
+<li>Small random numbers: Sampled from a multi-dimensional gaussian. We want to be close to zero, but not identically to zero. Symmetry breaking.
+<ul class="org-ul">
+<li>Calibrate the variances with 1/sqrt(n). n is number of inputs to the neuron. To ensure all neurons in the network initially have approximately the same output distribution and empirically improves the rate of convergence.
+</li>
+<li>A recent paper derives an initialization specifically for ReLU neurons that the var for neurons should be 2.0/n. <b>w = np.random.randn(n)*sqrt(2.0/n)</b> and <b>is the current recommendation for ReLU neurons</b>
+</li>
+</ul>
+</li>
+<li>Sparse initialization.
+</li>
+<li><b>Initializing biases:</b> common to initialize to zero. For ReLU, some people use small constant values like 0.0.1
+<b>in practice</b> current recommendation for ReLU <b>w = np.random.randn(n)*sqrt(2/n)</b>
+</li>
+<li>TODO <b>Batch Normalization</b>.  Significantly more robust to bad initialization. Amounts to insert BatchNorm layer immediately after fully connected layers or conv layers, and before non-linearities.
+</li>
+<li><b>Xavier initialization</b>: Helps signals reach deep into the network.
+<ul class="org-ul">
+<li>If the ws start too small, then signal shrinks as it passes through each layer until it's too tiny to be useful.
+</li>
+<li>If ws start too large, signal grows until it's too massive to be useful.
+</li>
+<li>With each passing layer, we want the variance to remain the same. This helps us keep the signal from exploding to a high value or vanishing to zero. In other words, we need to initialize the weights in such a way that the variance remains the same for x and y. 
+</li>
+</ul>
+<p>
+Xavier makes sure ws are 'just right'.
+</p>
+<ul class="org-ul">
+<li>Drawing the ws from a dist with zero mean and a specific variance var(W) = 2/(n<sub>in</sub> + n<sub>out</sub>). n<sub>in</sub> is num of neurons feeding into it, and n<sub>out</sub> is the num of neurons the result is fed to. The dist is usually Gaussian or uniform. Preserves also the backpropagated signal
+</li>
+<li>In caffe Var(W) = 1/n<sub>in</sub>. Its easier to compute.
+</li>
+<li>If you look closer at the problem and ReLU activation function, you can realize that ReLU does not lead to vanishing or exploding gradients and generally, you may not use Xavier initialization with this activation function.
+</li>
+<li>A recent paper by He et al.[3] presents a pretty straightforward generalization of ReLU and Leaky ReLU. What is more interesting is their emphasis on the benefits of Xavier initialization even for ReLU. They re-did the derivations for ReLUs and discovered that the conditions were the same up to a factor 2. 
+</li>
+</ul>
+</li>
+</ul>
+<p>
+But Xavier init is still good choice to init weights in your network.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-7-8" class="outline-4">
+<h4 id="sec-1-7-8"><span class="section-number-4">1.7.8</span> Gradient Check</h4>
+<div class="outline-text-4" id="text-1-7-8">
+<p>
+comparing analytic graident to the numerical gradient. If you are developing the optimizers.
+</p>
+<ul class="org-ul">
+<li>Use the centered formula
+</li>
+<li>Use double precision
+</li>
+<li>Use relative error for comparison: 1e-4 &gt; relative error is usually okay. 1e-7 and less better.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-7-9" class="outline-4">
+<h4 id="sec-1-7-9"><span class="section-number-4">1.7.9</span> Annealing the learning rate</h4>
+<div class="outline-text-4" id="text-1-7-9">
+<ul class="org-ul">
+<li>Step decay: Reduce learning rate by some factor every few epochs. The factor depends of the problem. Common heuristic: reduce the lr by a constant (e.g. 0.5) whenever the validation error stops improving.
+</li>
+<li>Exponential decay
+</li>
+<li>1/t decay.
+</li>
+</ul>
+<p>
+Step decay is preferable in practice. Err on the side of slower decay and train for a longer time.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-7-10" class="outline-4">
+<h4 id="sec-1-7-10"><span class="section-number-4">1.7.10</span> Second order methods</h4>
+<div class="outline-text-4" id="text-1-7-10">
+<ul class="org-ul">
+<li>involves calculating inverse Hessian Matrix.
+</li>
+<li>impractical because requires too much memory.
+</li>
+<li>To approximate the inverse Hessian. <b>L-BFGS</b>.
+</li>
+<li>Not common. More standard is to use SGD variants based on (Nesterov's) momentum.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-7-11" class="outline-4">
+<h4 id="sec-1-7-11"><span class="section-number-4">1.7.11</span> Hyperparameter optimization</h4>
+<div class="outline-text-4" id="text-1-7-11">
+</div><ol class="org-ol"><li><a id="sec-1-7-11-1" name="sec-1-7-11-1"></a>Implementation<br ><div class="outline-text-5" id="text-1-7-11-1">
+<p>
+have a worker that continuously samples random hyperparameters and performs the optimization. During the training, the worker will keep track of the validation performance after every epoch, and writes a model checkpoint (together with miscellaneous training statistics such as the loss over time) to a file.It is useful to include the validation performance directly in the filename, so that it is simple to inspect and sort the progress. Then there is a second program which we will call a master, which launches or kills workers across a computing cluster, and may additionally inspect the checkpoints written by workers and plot their training statistics, etc.
+</p>
+</div>
+</li>
+<li><a id="sec-1-7-11-2" name="sec-1-7-11-2"></a>Prefer one validation over cross-validation<br ><div class="outline-text-5" id="text-1-7-11-2">
+<p>
+In most cases a single validation set of respectable size substantially simplifies the code base, without the need for cross-validation with multiple folds.
+</p>
+</div>
+</li>
+<li><a id="sec-1-7-11-3" name="sec-1-7-11-3"></a>Hyperparameter ranges.<br ><div class="outline-text-5" id="text-1-7-11-3">
+<p>
+Search params on log scale. EX: learning<sub>rate</sub> = 10**uniform(-6,1). We generate random number from a uniform dist, but then raise it to the power of 10. The same for regularization strength.
+Learning rate and regularization strength have multiplicative effects on the training dynamics. LR multiplies the computed gradient in the update. Is much more natural to consider a range of lr multiplied or divided by some value.
+Some params (e.g. dropout) are instead usually search in the original scale.
+</p>
+</div>
+</li>
+<li><a id="sec-1-7-11-4" name="sec-1-7-11-4"></a>Prefer random search to grid search.<br ><div class="outline-text-5" id="text-1-7-11-4">
+<p>
+More efficient and easier to implement.
+<img src="./imgs/random_search.png" class="img-responsive" alt="random_search.png">
+</p>
+</div>
+</li>
+<li><a id="sec-1-7-11-5" name="sec-1-7-11-5"></a>Careful with best values on border.<br ><div class="outline-text-5" id="text-1-7-11-5">
+<p>
+You may be missing more optimal hyperparams setting beyong the search interval.
+</p>
+</div>
+</li>
+<li><a id="sec-1-7-11-6" name="sec-1-7-11-6"></a>Stage search from coarse to fine.<br ><div class="outline-text-5" id="text-1-7-11-6">
+<p>
+first search in coarse ranges, and depending on where the best results are turning up, narrow the range. Helpfull to perform initial coarse search with only 1 epoch or less. A narrower search with 5 epochs, and later a detailed search for many more epochs.
+</p>
+</div>
+</li>
+<li><a id="sec-1-7-11-7" name="sec-1-7-11-7"></a>Bayesian Hyperparameter Optimization<br ><div class="outline-text-5" id="text-1-7-11-7">
+<p>
+appropriately balance the exploration-explotation trade-off when querying the performance at different hyperparameter.
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-7-12" class="outline-4">
+<h4 id="sec-1-7-12"><span class="section-number-4">1.7.12</span> Ensembles</h4>
+<div class="outline-text-4" id="text-1-7-12">
+<p>
+Train multiple independent models, and at test time avg their predictions.
+Take longer to evaluate.
+</p>
+</div>
+<ol class="org-ol"><li><a id="sec-1-7-12-1" name="sec-1-7-12-1"></a>Same model, different initialization.<br ></li>
+<li><a id="sec-1-7-12-2" name="sec-1-7-12-2"></a>Top models discovered using cross-validation<br ></li>
+<li><a id="sec-1-7-12-3" name="sec-1-7-12-3"></a>Different checkpoints of a single model<br ></li>
+<li><a id="sec-1-7-12-4" name="sec-1-7-12-4"></a>Running avg of params during training.<br ></li></ol>
+</div>
+<div id="outline-container-sec-1-7-13" class="outline-4">
+<h4 id="sec-1-7-13"><span class="section-number-4">1.7.13</span> <span class="label label-primary TODO">TODO</span> Residual Learning</h4>
+</div>
+</div>
+<div id="outline-container-sec-1-8" class="outline-3">
+<h3 id="sec-1-8"><span class="section-number-3">1.8</span> Datasets</h3>
+<div class="outline-text-3" id="text-1-8">
+</div><div id="outline-container-sec-1-8-1" class="outline-4">
+<h4 id="sec-1-8-1"><span class="section-number-4">1.8.1</span> Mnist</h4>
+</div>
+<div id="outline-container-sec-1-8-2" class="outline-4">
+<h4 id="sec-1-8-2"><span class="section-number-4">1.8.2</span> not mnist</h4>
+</div>
+<div id="outline-container-sec-1-8-3" class="outline-4">
+<h4 id="sec-1-8-3"><span class="section-number-4">1.8.3</span> CIFAR-10</h4>
+<div class="outline-text-4" id="text-1-8-3">
+<p>
+60000 32x32 images divided in 10 classess. 50000 training, 10000 testing
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-9" class="outline-3">
+<h3 id="sec-1-9"><span class="section-number-3">1.9</span> Case studies, state of the art</h3>
+<div class="outline-text-3" id="text-1-9">
+</div><div id="outline-container-sec-1-9-1" class="outline-4">
+<h4 id="sec-1-9-1"><span class="section-number-4">1.9.1</span> LeNet</h4>
+<div class="outline-text-4" id="text-1-9-1">
+<p>
+First success in using convnets.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-9-2" class="outline-4">
+<h4 id="sec-1-9-2"><span class="section-number-4">1.9.2</span> alexnet</h4>
+<div class="outline-text-4" id="text-1-9-2">
+<p>
+winner of ImageNet challenge 2012. (top 5 error of 16%). Similar to LeNet, but deeper, bigger, and featured Conv Layers stacked on top of each other.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-9-3" class="outline-4">
+<h4 id="sec-1-9-3"><span class="section-number-4">1.9.3</span> ZF NET</h4>
+<div class="outline-text-4" id="text-1-9-3">
+<p>
+winner of ImageNet 2013. Improvements of AlexNet by tweaking hyperparams, expanding size of the middle conv layers and making stride and filter size on first layer smaller.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-9-4" class="outline-4">
+<h4 id="sec-1-9-4"><span class="section-number-4">1.9.4</span> GoogLeNet</h4>
+<div class="outline-text-4" id="text-1-9-4">
+<p>
+Winner of ImageNet 2014. Development of <i>Inception Module</i>, reduced the num of params in the net (4M, compared to AlexNet 60M). Uses avg pooling instead of fc layers at the top of the ConvNet, eliminating params that dont matter much. Inception-v4 is the most recent following version.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-9-5" class="outline-4">
+<h4 id="sec-1-9-5"><span class="section-number-4">1.9.5</span> VGGNet</h4>
+<div class="outline-text-4" id="text-1-9-5">
+<p>
+Pushing the depth of conv networks to 16-19 improves accuracy.
+Uses 3x3 size filters.
+runner-up in Imagenet challenge 2014.
+their pretrained model is available for plug and play use in Caffe.
+Uses more memory and params. Most of the params are in the fst fc layer. Later was found that these fc layers can be removed with no performance downgrade.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-9-6" class="outline-4">
+<h4 id="sec-1-9-6"><span class="section-number-4">1.9.6</span> ResNet</h4>
+<div class="outline-text-4" id="text-1-9-6">
+<p>
+Residual Network. Winner 2015. Features special skip connections and heavy use of <b>batch normalization</b>.
+Also no fc layers at the end. By far state of the art model and default choice for using ConvNets in practice (as of May 10,2016). 
+</p>
+
+<p>
+Why do very deep nets perform worse as you keep adding layers? The authors The authors of ResNet boiled these problems down to a single hypothesis: direct mappings are hard to learn. And they proposed a fix: instead of trying to learn an underlying mapping from x to H(x), learn the difference between the two, or the “residual.” Then, to calculate H(x), we can just add the residual to the input.
+</p>
+
+<p>
+Say the residual is F(x)=H(x)-x. Now, instead of trying to learn H(x) directly, our nets are trying to learn F(x)+x.
+</p>
+
+<p>
+Each “block” in ResNet consists of a series of layers and a “shortcut” connection adding the input of the block to its output. The “add” operation is performed element-wise, and if the input and output are of different sizes, zero-padding or projections (via 1x1 convolutions) can be used to create matching dimensions.
+</p>
+
+
+<figure>
+<p><img src="./imgs/resnet.jpeg" class="img-responsive" alt="resnet.jpeg">
+</p>
+</figure>
+
+<p>
+Because the gradient signal in ResNets could travel back directly to early layers via shortcut connections, we could suddenly build 50-layer, 101-layer, 152-layer, and even (apparently) 1000+ layer nets that still performed well. At the time, this was a huge leap forward from the previous state-of-the-art
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-9-7" class="outline-4">
+<h4 id="sec-1-9-7"><span class="section-number-4">1.9.7</span> Inception</h4>
+<div class="outline-text-4" id="text-1-9-7">
+<p>
+How can we scale up neural nets without increasing computational cost? Using new building block for deep nets, known as "Inception module". This module is the product of 2 key insights.
+</p>
+
+<p>
+In a traditional conv net, each layer extracts information from previous layer to transform the input data into a more useful representation. Each layer type extracts a different kind of information. The output of a 5x5 conv kernel tells something different of the output of 3x3 conv kernel, which is different from the output of a max-pooling kernel, and so on. At any given layer, how do we know what transformation provides the most “useful” information?
+</p>
+</div>
+
+<ol class="org-ol"><li><a id="sec-1-9-7-1" name="sec-1-9-7-1"></a>Insight #1 let model choose<br ><div class="outline-text-5" id="text-1-9-7-1">
+<p>
+An Inception module computes multiple different transformations over the same input map in parallel, concatenating their results into a single output. In other words, for each layer, Inception does a 5x5 convolutional transformation, and a 3x3, and a max-pool. And the next layer of the model gets to decide if (and how) to use each piece of information.
+</p>
+
+
+<figure>
+<p><img src="./imgs/inception_module.jpeg" class="img-responsive" alt="inception_module.jpeg">
+</p>
+</figure>
+
+<p>
+The increased information density of this model architecture comes with one glaring problem: we’ve drastically increased computational costs. Not only are large (e.g. 5x5) convolutional filters inherently expensive to compute, stacking multiple different filters side by side greatly increases the number of feature maps per layer.
+</p>
+</div>
+</li>
+
+<li><a id="sec-1-9-7-2" name="sec-1-9-7-2"></a>Insight #2<br ><div class="outline-text-5" id="text-1-9-7-2">
+<p>
+using 1x1 convolutions to perform dimensionality reduction. In order to solve the computational bottleneck, the authors of Inception used 1x1 convolutions to “filter” the depth of the outputs. A 1x1 convolution only looks at one value at a time, but across multiple channels, it can extract spatial information and compress it down to a lower dimension. For example, using 20 1x1 filters, an input of size 64x64x100 (with 100 feature maps) can be compressed down to 64x64x20. By reducing the number of input maps, the authors of Inception were able to stack different layer transformations in parallel, resulting in nets that were simultaneously deep (many layers) and “wide” (many parallel operations).
+</p>
+
+
+<figure>
+<p><img src="./imgs/inception.png" class="img-responsive" alt="inception.png">
+</p>
+</figure>
+
+<p>
+The first version of Inception, dubbed “GoogLeNet,” was the 22-layer winner of the ILSVRC 2014 competition I mentioned earlier. Inception v2 and v3 were developed in a second paper a year later, and improved on the original in several ways — most notably by refactoring larger convolutions into consecutive smaller ones that were easier to learn. In v3, for example, the 5x5 convolution was replaced with 2 consecutive 3x3 convolutions.
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-9-8" class="outline-4">
+<h4 id="sec-1-9-8"><span class="section-number-4">1.9.8</span> <span class="label label-primary TODO">TODO</span> Capsule networks (CAPSNETS)</h4>
+<div class="outline-text-4" id="text-1-9-8">
+<p>
+Aim to remedy weakness of todays machine learning systems: not good at generalizing what it learns to new scenarios, like that an object is the same when seen from a new viewpoint. 
+Build a little more knowledge of the world into computer-vision software
+Capsules: small groups of crude virtual neurons, are designed to track different parts of an object, and thir relative positions in space. A network of many capsules can use that awareness to understand when a new scene is in fact a different view of something it has seen before.
+Still slow compared to existing image-recognition software.
+Departs from the trend that humans should encode as little knowledge as possible into AI software, making them figure things out from scratch.
+</p>
+
+<ul class="org-ul">
+<li>It's important to understand what capsules try to solve before you delve into the details. If you look at Hinton's papers and talks, capsule is really an idea which improve upon Convnet. Hinton has two major complaints.
+</li>
+<li>First, the general settings of Convnet assumes that one filter is being used across different locations. This is also known as "location invariance". In this setting, the exact location of a feature doesn't matter. That has a lot to do with robust feature parameter estimation. It also drastically simplify backprop with weight sharing.
+</li>
+<li>But then location invariance also removes one important information of an image: the apparent location.
+</li>
+</ul>
+<p>
+-Second assumption is max pooling. As you know, pooling usually removes a high percentage of information from the previous layer. In early architectures, usually pooling is the key to shrink the size of a representation down. Of course, later architectures had changed. But pooling is still an important component.
+-So the design of capsule has a lot of do to tackle problems of max pooling: Instead of losing information, can we "route" pixel values from previous layer correctly so that they are in optimal use?
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-9-9" class="outline-4">
+<h4 id="sec-1-9-9"><span class="section-number-4">1.9.9</span> Xception</h4>
+<div class="outline-text-4" id="text-1-9-9">
+<p>
+"Extreme inception"
+Here’s the hypothesis: “cross-channel correlations and spatial correlations are sufficiently decoupled that it is preferable not to map them jointly.”
+is there any reason we need to consider both the image region and the channels at the same time?
+</p>
+
+<p>
+In Inception, we began separating the two slightly. We used 1x1 convolutions to project the original input into several separate, smaller input spaces, and from each of those input spaces we used a different type of filter to transform those smaller 3D blocks of data. Xception takes this one step further. Instead of partitioning input data into several compressed chunks, it maps the spatial correlations for each output channel separately, and then performs a 1x1 depthwise convolution to capture cross-channel correlation.
+</p>
+
+
+<figure>
+<p><img src="./imgs/xception.jpeg" class="img-responsive" alt="xception.jpeg">
+</p>
+</figure>
+
+<p>
+The author notes that this is essentially equivalent to an existing operation known as a “depthwise separable convolution,” which consists of a depthwise convolution (a spatial convolution performed independently for each channel) followed by a pointwise convolution (a 1x1 convolution across channels). We can think of this as looking for correlations across a 2D space first, followed by looking for correlations across a 1D space. Intuitively, this 2D + 1D mapping is easier to learn than a full 3D mapping.
+</p>
+
+<p>
+And it works! Xception slightly outperforms Inception v3 on the ImageNet dataset, and vastly outperforms it on a larger image classification dataset with 17,000 classes. Most importantly, it has the same number of model parameters as Inception, implying a greater computational efficiency. Xception is much newer (it came out in April 2017), but as mentioned above, its architecture is already powering Google’s mobile vision applications through MobileNet.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-9-10" class="outline-4">
+<h4 id="sec-1-9-10"><span class="section-number-4">1.9.10</span> <span class="label label-primary TODO">TODO</span> Mobilenet</h4>
+</div>
+<div id="outline-container-sec-1-9-11" class="outline-4">
+<h4 id="sec-1-9-11"><span class="section-number-4">1.9.11</span> Bibliography</h4>
+<div class="outline-text-4" id="text-1-9-11">
+</div><ol class="org-ol"><li><a id="sec-1-9-11-1" name="sec-1-9-11-1"></a><a href="https://towardsdatascience.com/an-intuitive-guide-to-deep-network-architectures-65fdc477db41">Intuitive guide to deep network architectures</a><br ></li></ol>
+</div>
+</div>
+<div id="outline-container-sec-1-10" class="outline-3">
+<h3 id="sec-1-10"><span class="section-number-3">1.10</span> Frameworks, libraries</h3>
+<div class="outline-text-3" id="text-1-10">
+</div><div id="outline-container-sec-1-10-1" class="outline-4">
+<h4 id="sec-1-10-1"><span class="section-number-4">1.10.1</span> <span class="label label-primary TODO">TODO</span> tensorflow</h4>
+</div>
+<div id="outline-container-sec-1-10-2" class="outline-4">
+<h4 id="sec-1-10-2"><span class="section-number-4">1.10.2</span> <span class="label label-primary TODO">TODO</span> tflearn</h4>
+</div>
+<div id="outline-container-sec-1-10-3" class="outline-4">
+<h4 id="sec-1-10-3"><span class="section-number-4">1.10.3</span> <span class="label label-primary TODO">TODO</span> keras</h4>
+</div>
+<div id="outline-container-sec-1-10-4" class="outline-4">
+<h4 id="sec-1-10-4"><span class="section-number-4">1.10.4</span> <span class="label label-primary TODO">TODO</span> caffe</h4>
+</div>
+<div id="outline-container-sec-1-10-5" class="outline-4">
+<h4 id="sec-1-10-5"><span class="section-number-4">1.10.5</span> <span class="label label-primary TODO">TODO</span> torch</h4>
+</div>
+<div id="outline-container-sec-1-10-6" class="outline-4">
+<h4 id="sec-1-10-6"><span class="section-number-4">1.10.6</span> <span class="label label-primary TODO">TODO</span> pytorch</h4>
+</div>
+</div>
+<div id="outline-container-sec-1-11" class="outline-3">
+<h3 id="sec-1-11"><span class="section-number-3">1.11</span> Recommendations</h3>
+<div class="outline-text-3" id="text-1-11">
+</div><div id="outline-container-sec-1-11-1" class="outline-4">
+<h4 id="sec-1-11-1"><span class="section-number-4">1.11.1</span> Before learning</h4>
+<div class="outline-text-4" id="text-1-11-1">
+</div><ol class="org-ol"><li><a id="sec-1-11-1-1" name="sec-1-11-1-1"></a>Look for correct loss at chance performance.<br ><div class="outline-text-5" id="text-1-11-1-1">
+<p>
+Make sure to get the loss you expect when you initialize with small params.
+</p>
+</div>
+</li>
+<li><a id="sec-1-11-1-2" name="sec-1-11-1-2"></a>Increasing the regularization strength should increase the loss<br ></li>
+<li><a id="sec-1-11-1-3" name="sec-1-11-1-3"></a>Overfit a tiny subset of data.<br ></li></ol>
+</div>
+<div id="outline-container-sec-1-11-2" class="outline-4">
+<h4 id="sec-1-11-2"><span class="section-number-4">1.11.2</span> Monitoring</h4>
+<div class="outline-text-4" id="text-1-11-2">
+<p>
+Plots to get intuition about different hyperparameter settings and how they should be changed for more efficient learning.
+X-axis should be in units of epochs. (One epoch means that every example has been seen once).
+</p>
+</div>
+<ol class="org-ol"><li><a id="sec-1-11-2-1" name="sec-1-11-2-1"></a>Loss function<br ><div class="outline-text-5" id="text-1-11-2-1">
+
+<figure>
+<p><img src="./imgs/loss_plot.png" class="img-responsive" alt="loss_plot.png">
+</p>
+</figure>
+
+<p>
+The amount of "wiggle" is related to the batch size.
+Some people prefer to plot the loss in the log domain. If multiple cross-validated models are plotted on the same loss graph, the differences between them become more apparent.
+</p>
+</div>
+</li>
+<li><a id="sec-1-11-2-2" name="sec-1-11-2-2"></a>Train/Val accuracy<br ><div class="outline-text-5" id="text-1-11-2-2">
+<p>
+Gives you insights into the amount of overfitting.
+<img src="./imgs/train_val_plot.png" class="img-responsive" alt="train_val_plot.png">
+</p>
+</div>
+</li>
+<li><a id="sec-1-11-2-3" name="sec-1-11-2-3"></a>Ratio of weights updates<br ><div class="outline-text-5" id="text-1-11-2-3">
+<p>
+ratio of the updates magnitudes to the value magnitudes, for every set of params independently. Heuristic: somewhere around 1e-3. Lower, then learning rate is too low. Higher, then learning rate is likely too high.
+</p>
+</div>
+</li>
+<li><a id="sec-1-11-2-4" name="sec-1-11-2-4"></a>Activation/Gradient distributions per layer.<br ><div class="outline-text-5" id="text-1-11-2-4">
+<p>
+plot activation/gradient histograms for all layers of the net, and see if there are strange distributions(outputting zero, neurons saturated).
+</p>
+</div>
+</li>
+<li><a id="sec-1-11-2-5" name="sec-1-11-2-5"></a>First-layer visualizations<br ><div class="outline-text-5" id="text-1-11-2-5">
+<p>
+when working with images, plot the first-layer features visually.
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-11-3" class="outline-4">
+<h4 id="sec-1-11-3"><span class="section-number-4">1.11.3</span> Trainining</h4>
+<div class="outline-text-4" id="text-1-11-3">
+<ul class="org-ul">
+<li>Optimizer: Adam, or SGD with Nesterov momentum
+</li>
+<li>Decay lr: Halve the lr after fixed number of epochs, or whenever the validation accuracy tops off.
+</li>
+<li>Search good hyperparams with random search.
+</li>
+<li>Form ensembles for extra performance.
+</li>
+<li>Monitoring
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-11-4" class="outline-4">
+<h4 id="sec-1-11-4"><span class="section-number-4">1.11.4</span> Computational Considerations</h4>
+<div class="outline-text-4" id="text-1-11-4">
+<p>
+largest bottleneck: memory.
+</p>
+<ul class="org-ul">
+<li>From intermediate volume sizes: the raw number of <b>activations</b> at every layer of ConvNet, and their gradients (of equal size). Most activations are in earlier layers. Kept around cuz needed for backpropagation. An implementation that runs a ConvNet only at test time could reduce this by a huge amount, only storing the current activations at any layer and discarding the prev activations on layers below
+</li>
+<li>From param sizes.  gradients, and step cache if using momentum, adagrad or rmsprop. The memory to store the para vector alone must usually be multiplied by a factor of at least 3.
+</li>
+<li>miscellaneous memory, such as image data batches, augmented versions, etc.
+</li>
+</ul>
+<p>
+The number should be converted to GB. Take the num of values, multiply by 4 to get number of bytes (every floating point is 4 bytes, 8 for double precision), and then keep dividing by 1024 to get GB.
+A common heuristic to "make it fit" is to decrease the batch size, since most of the memory is usually consumed by the activations.
+</p>
+
+
+<ul class="org-ul">
+<li><a href="https://towardsdatascience.com/deep-learning-tips-and-tricks-1ef708ec5f53">Tips and tricks</a>
+</li>
+<li><a href="http://introtodeeplearning.com/">Intro Deep Learning MIT</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div><div class="col-md-3"><nav id="table-of-contents">
+<div id="text-table-of-contents" class="bs-docs-sidebar">
+<ul class="nav">
+<li><a href="#sec-1">1. Neural Networks</a>
+<ul class="nav">
+<li><a href="#sec-1-1">1.1. Preprocessing</a></li>
+<li><a href="#sec-1-2">1.2. Base</a></li>
+<li><a href="#sec-1-3">1.3. Optimizers</a></li>
+<li><a href="#sec-1-4">1.4. Activation Functions</a></li>
+<li><a href="#sec-1-5">1.5. Loss Functions, Cost Functions, Objective Functions</a></li>
+<li><a href="#sec-1-6">1.6. Types of Networks</a></li>
+<li><a href="#sec-1-7">1.7. Improvements, Regularization</a></li>
+<li><a href="#sec-1-8">1.8. Datasets</a></li>
+<li><a href="#sec-1-9">1.9. Case studies, state of the art</a></li>
+<li><a href="#sec-1-10">1.10. Frameworks, libraries</a></li>
+<li><a href="#sec-1-11">1.11. Recommendations</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+</div></div></div>
+<footer id="postamble" class="">
+<div><p class="author">Author: gabo</p>
+<p class="date">Created: 2018-08-20 lun 10:59</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.1 (<a href="http://orgmode.org">Org-mode</a> 9.1.13)</p>
+</div>
+</footer>
+</body>
+</html>
