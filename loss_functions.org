@@ -1,0 +1,31 @@
+* Loss functions
+it’s a method of evaluating how well your algorithm models your dataset. Most Machine Learning algorithms use some sort of loss function in the process of optimization, or finding the best parameters (weights) for your data.
+
+** Regression
+   See in [[./metric_functions.org]]
+   Using the squared error is easier to get derivative, but is more prone to outliers
+*** MSE
+*** MAE
+*** MSRE
+    
+
+** Classification
+*** Likelihood loss
+*** Log Loss (Cross Entropy Error)
+    measures the performance of a classification model whose output is a probability value between 0 and 1. Cross-entropy loss increases as the predicted probability diverges from the actual label.
+    [[./imgs/loss_funs/cross_entropy.png]]
+    The graph above shows the range of possible loss values given a true observation (isDog = 1). As the predicted probability approaches 1, log loss slowly decreases. As the predicted probability decreases, however, the log loss increases rapidly. Log loss penalizes both types of errors, but especially those predictions that are confident and wrong!
+
+    [[./imgs/loss_funs/logloss.png]]
+
+*** Hinge Loss
+    The (L2-regularized) hinge loss leads to the canonical support vector machine model with the max-margin property: the margin is the smallest distance from the line (or more generally, hyperplane) that separates our points into classes and defines our classification:
+    [[./imgs/loss_funs/optimal-hyperplane.png]]
+
+    The hinge loss penalizes predictions not only when they are incorrect, but even when they are correct but not confident. It penalizes gravely wrong predictions significantly, correct but not confident predictions a little less, and only confident, correct predictions are not penalized at all. Let’s formalize this by writing out the hinge loss in the case of binary classification:
+    [[./imgs/loss_funs/hinge_loss.png]]
+
+    The (multi-class) hinge loss would recognize that the correct class score already exceeds the other scores by more than the margin, so it will invoke zero loss on both scores. Once the margins are satisfied, the SVM will no longer optimize the weights in an attempt to “do better” than it is already.
+** References
+   - [[http://rohanvarma.me/Loss-Functions/]]
+   - https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html
