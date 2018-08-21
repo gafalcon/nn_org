@@ -1,6 +1,6 @@
 
 * Natural Language Processing
-*** TODO Word Representations
+*** Word Representations
 **** Embeddings
      - Function *W* that maps words to high-dimensional vectors. Usually is just a lookup table
      - W is initialized to have random vecs for each words. It learns meaningful vectors in order to perform some task
@@ -12,8 +12,9 @@
        Theres probably a gender dimension, same thing for singular vs plural, and more sophisticated relationships.
      - NN learn better ways to represent data automatically. Embeddings is an example.
      - Can also be used to deal with the sparse matrix problem in recommender systems.
-**** TODO t-SNE
+**** t-SNE
      For visualizing high-dimensional data. Words with similar meanings are close together.
+     t-Distributed Stochastic Neighbor Embedding (t-SNE) is a (prize-winning) technique for dimensionality reduction that is particularly well suited for the visualization of high-dimensional datasets. The technique can be implemented via Barnes-Hut approximations, allowing it to be applied on large real-world datasets
 **** word2vec
      unsupervised learning algo used for producing word embeddings. Two ways to implement it:
      1. CBOW (Continuous Bag of Words): have a window around a target word and consider words around it (its context). Supply these words as input into our net and use it to try to predict the target word.
@@ -21,10 +22,33 @@
         Feed word pairs. The network is going to learn statistics from the number of times each pairing shows up.
         The nn does not know anything about the offset of the output word relative to the input word. It does not learn a different set of probs for the word before the input vs the word after.
         If two diff words have very similar "context" (words around them), our model outputs similar results for these two words.
+        
+        #+ATTR_ORG: :width 300
+        [[./imgs/nlp/max_word2vec.png]]
+        
+        Replacing with negative log likelihood
+
+        #+ATTR_ORG: :width 300
+        [[./imgs/nlp/nll_word2vec.png]]
+
+        Transformed to proper loss function:
+
+        #+ATTR_ORG: :width 300
+        [[./imgs/nlp/loss_fun_word2vec.png]]
+
+        where *P* is
+
+        #+ATTR_ORG: :width 300
+        [[./imgs/nlp/p_word2vec.png]]
+
+        For each existing center, context pair in corpus we’re computing their “similarity score”. And divide it by sum of each theoretically possible context — to know whether score is relatively high or low. As softmax is guaranteed to take a value between 0 and 1 it defines a valid probability distribution.
 
      Input words are passed as one-hot vectors. Hidden-layer of linear units, then into softmax layer to make predictions. Train the hidden layer weight matrix to find efficient representations for our words. This is the *embedding* matrix. The hidden layer just operates as a lookup table. Its output is just the "word vector" for the input word.
      
-     [[./imgs/skip_gram_net_arch.png]]
+     [[./imgs/nlp/skip_gram_net_arch.png]]
+
+     In esence, it uses two embedding matrices, the first to lookup the center word vector, and this one is multiplied to the other embedding matrix of the context word vecs, which is like making a dot product between the center word vec to all the context word vecs, the highest dot product represents the most similar word, part of its context.
+     [[./imgs/nlp/skip-gram-architecture.png]]
 
      The embedding matrix has a size of the num of words by the num of neurons in the hidden layer (embed size).
      The embed size is much smaller than the number of unique words. its a trade-off: more features->extra computation and longer run times, but allow more subtle representations, and better models.
@@ -51,13 +75,13 @@
 ***** Intuition
       The main intuition underlying the model is the simple observation that ratios of word-word co-occurrence probabilities have the potential for encoding some form of meaning. For example, consider the co-occurrence probabilities for target words ice and steam with various probe words from the vocabulary. Here are some actual probabilities from a 6 billion word corpus:
 
-      [[./imgs/glove_table.png]]
+      [[./imgs/nlp/glove_table.png]]
 
       As one might expect, ice co-occurs more frequently with solid than it does with gas, whereas steam co-occurs more frequently with gas than it does with solid. Both words co-occur with their shared property water frequently, and both co-occur with the unrelated word fashion infrequently. Only in the ratio of probabilities does noise from non-discriminative words like water and fashion cancel out, so that large values (much greater than 1) correlate well with properties specific to ice, and small values (much less than 1) correlate well with properties specific of steam. In this way, the ratio of probabilities encodes some crude form of meaning associated with the abstract concept of thermodynamic phase.
 
       The training objective of GloVe is to learn word vectors such that their dot product equals the logarithm of the words' probability of co-occurrence. Owing to the fact that the logarithm of a ratio equals the difference of logarithms, this objective associates (the logarithm of) ratios of co-occurrence probabilities with vector differences in the word vector space. Because these ratios can encode some form of meaning, this information gets encoded as vector differences as well. For this reason, the resulting word vectors perform very well on word analogy tasks.
 
-      [[./imgs/glove_loss_function.png]]
+      [[./imgs/nlp/glove_loss_function.png]]
       
       *P_{ij}* is the count of how often word  i appears in context of word j. *P* is the co-occurrence matrix. *f* is a weighting function which help us to prevent learning only from extremely common word pairs. 
 
@@ -66,7 +90,7 @@
 ***** Matrix Factorization
       The idea then is to apply matrix factorization to approximate this matrix as depicted in the following figure.
 
-      [[./imgs/glove_matrix_factorization.png]]
+      [[./imgs/nlp/glove_matrix_factorization.png]]
 
       Considering the Word-Context (WC) matrix, Word-Feature (WF) matrix and Feature-Context (FC) matrix, we try to factorize WC = WF x FC, such that we we aim to reconstruct WC from WF and FC by multiplying them. For this, we typically initialize WF and FC with some random weights and attempt to multiply them to get WC’ (an approximation of WC) and measure how close it is to WC. We do this multiple times using Stochastic Gradient Descent (SGD) to minimize the error. Finally, the Word-Feature matrix (WF) gives us the word embeddings for each word where F can be preset to a specific number of dimensions. 
       https://www.kdnuggets.com/2018/04/implementing-deep-learning-methods-feature-engineering-text-data-glove.html
@@ -97,3 +121,5 @@
     - [[https://www.kdnuggets.com/2018/04/implementing-deep-learning-methods-feature-engineering-text-data-glove.html][Glove]]
     - [[http://web.stanford.edu/class/cs224n/syllabus.html][Stanford CS224n: Natural Language Processing with deep learning]]
     - [[https://www.quora.com/What-is-the-main-difference-between-word2vec-and-fastText][Difference between word2vec and fastText]]
+    - [[https://nathanrooy.github.io/posts/2018-03-22/word2vec-from-scratch-with-python-and-numpy/]]
+    - https://towardsdatascience.com/implementing-word2vec-in-pytorch-skip-gram-model-e6bae040d2fb

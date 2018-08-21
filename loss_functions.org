@@ -18,6 +18,8 @@ it’s a method of evaluating how well your algorithm models your dataset. Most 
 
     [[./imgs/loss_funs/logloss.png]]
 
+    For an explanation of entropy, cross entropy and kl divergence see [[https://rdipietro.github.io/friendly-intro-to-cross-entropy-loss/]]
+
 *** Hinge Loss
     The (L2-regularized) hinge loss leads to the canonical support vector machine model with the max-margin property: the margin is the smallest distance from the line (or more generally, hyperplane) that separates our points into classes and defines our classification:
     [[./imgs/loss_funs/optimal-hyperplane.png]]
