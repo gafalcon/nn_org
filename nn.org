@@ -197,7 +197,8 @@
       - Compromising based on memory constraints. The amount of memory can build up very quickly with the rules presented above. In practice, people prefer to make the compromise at only the first CONV layer. Like using a first CONV layer with filter sizes of 7x7 and stride of 2. AlexNet uses 11x11 and stride of 4. 
 **** TODO Inception
 *** TODO Deconvolutional networks
-*** TODO Recurrent nets
+*** Recurrent networks
+
 *** Autoencoders
     NN capable of unsupervised feature learning
     [[./autoencoders.org][autoencoders]]
