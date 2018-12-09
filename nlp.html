@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title></title>
+<!-- 2018-12-07 vie 11:10 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Org-mode">
+<meta name="author" content="gabo">
+
+<link  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<style type="text/css">
+/* org mode styles on top of twbs */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-size: 18px;
+    margin-bottom: 105px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 101px;
+    background-color: #f5f5f5;
+}
+
+footer > div {
+    padding: 10px;
+}
+
+footer p {
+    margin: 0 0 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+#table-of-contents {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+blockquote p {
+    font-size: 18px;
+}
+
+pre {
+    font-size: 16px;
+}
+
+.footpara {
+    display: inline-block;
+}
+
+figcaption {
+  font-size: 16px;
+  color: #666;
+  font-style: italic;
+  padding-bottom: 15px;
+}
+
+/* from twbs docs */
+
+.bs-docs-sidebar.affix {
+    position: static;
+}
+@media (min-width: 768px) {
+    .bs-docs-sidebar {
+        padding-left: 20px;
+    }
+}
+
+/* All levels of nav */
+.bs-docs-sidebar .nav > li > a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999;
+}
+.bs-docs-sidebar .nav > li > a:hover,
+.bs-docs-sidebar .nav > li > a:focus {
+    padding-left: 19px;
+    color: #A1283B;
+    text-decoration: none;
+    background-color: transparent;
+    border-left: 1px solid #A1283B;
+}
+.bs-docs-sidebar .nav > .active > a,
+.bs-docs-sidebar .nav > .active:hover > a,
+.bs-docs-sidebar .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: bold;
+    color: #A1283B;
+    background-color: transparent;
+    border-left: 2px solid #A1283B;
+}
+
+/* Nav: second level (shown on .active) */
+.bs-docs-sidebar .nav .nav {
+    display: none; /* Hide by default, but at >768px, show it */
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav > li > a:focus {
+    padding-left: 29px;
+}
+.bs-docs-sidebar .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav > .active:focus > a {
+    padding-left: 28px;
+    font-weight: 500;
+}
+
+/* Nav: third level (shown on .active) */
+.bs-docs-sidebar .nav .nav .nav {
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 40px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav .nav > li > a:focus {
+    padding-left: 39px;
+}
+.bs-docs-sidebar .nav .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav .nav > .active:focus > a {
+    padding-left: 38px;
+    font-weight: 500;
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: 992px) {
+    .bs-docs-sidebar .nav > .active > ul {
+        display: block;
+    }
+    /* Widen the fixed sidebar */
+    .bs-docs-sidebar.affix,
+    .bs-docs-sidebar.affix-bottom {
+        width: 213px;
+    }
+    .bs-docs-sidebar.affix {
+        position: fixed; /* Undo the static from mobile first approach */
+        top: 20px;
+    }
+    .bs-docs-sidebar.affix-bottom {
+        position: absolute; /* Undo the static from mobile first approach */
+    }
+    .bs-docs-sidebar.affix .bs-docs-sidenav,.bs-docs-sidebar.affix-bottom .bs-docs-sidenav {
+        margin-top: 0;
+        margin-bottom: 0
+    }
+}
+@media (min-width: 1200px) {
+    /* Widen the fixed sidebar again */
+    .bs-docs-sidebar.affix-bottom,
+    .bs-docs-sidebar.affix {
+        width: 263px;
+    }
+}
+</style>
+<script type="text/javascript">
+$(function() {
+    'use strict';
+
+    $('.bs-docs-sidebar li').first().addClass('active');
+
+    $(document.body).scrollspy({target: '.bs-docs-sidebar'});
+
+    $('.bs-docs-sidebar').affix();
+});
+</script>
+</head>
+<body>
+<div id="content" class="container">
+<div class="row"><div class="col-md-9"><h1 class="title"></h1>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Natural Language Processing</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-0-1" class="outline-4">
+<h4 id="sec-1-0-1"><span class="section-number-4">1.0.1</span> Word Representations</h4>
+<div class="outline-text-4" id="text-1-0-1">
+</div><ol class="org-ol"><li><a id="sec-1-0-1-1" name="sec-1-0-1-1"></a>Embeddings<br ><div class="outline-text-5" id="text-1-0-1-1">
+<ul class="org-ul">
+<li>Function <b>W</b> that maps words to high-dimensional vectors. Usually is just a lookup table
+</li>
+<li>W is initialized to have random vecs for each words. It learns meaningful vectors in order to perform some task
+</li>
+<li>Example: predict valid 5-grams (sequences of 5 words). The model will run each word in the 5-gram through W to get a vector representing it and feed those into a module <b>R</b> that predicts its validity. For this predictions, the net needs to learn good params for <b>W</b> and <b>R</b>. The interesting part is <b>W</b>.
+</li>
+<li>words with similar meanings have similar vectors. allows us to generalize from one sentence to a class of similar senteces.
+</li>
+<li>analogies between words seem to be encoded in the difference vectors between words. Ex: male-female difference vectors:
+W(woman) - W(man) approx eq W(aunt) - W(uncle)
+W(woman) - W(man) approx eq W(queen) - W(king).
+Theres probably a gender dimension, same thing for singular vs plural, and more sophisticated relationships.
+</li>
+<li>NN learn better ways to represent data automatically. Embeddings is an example.
+</li>
+<li>Can also be used to deal with the sparse matrix problem in recommender systems.
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-0-1-2" name="sec-1-0-1-2"></a>t-SNE<br ><div class="outline-text-5" id="text-1-0-1-2">
+<p>
+For visualizing high-dimensional data. Words with similar meanings are close together.
+t-Distributed Stochastic Neighbor Embedding (t-SNE) is a (prize-winning) technique for dimensionality reduction that is particularly well suited for the visualization of high-dimensional datasets. The technique can be implemented via Barnes-Hut approximations, allowing it to be applied on large real-world datasets
+</p>
+</div>
+</li>
+<li><a id="sec-1-0-1-3" name="sec-1-0-1-3"></a>word2vec<br ><div class="outline-text-5" id="text-1-0-1-3">
+<p>
+unsupervised learning algo used for producing word embeddings. Two ways to implement it:
+</p>
+<ol class="org-ol">
+<li>CBOW (Continuous Bag of Words): have a window around a target word and consider words around it (its context). Supply these words as input into our net and use it to try to predict the target word.
+</li>
+<li>Skip-gram. Have a target word and try to predict the words in the window arount it. Predict the context around a word. Given a specific word in middle of sentence, look at the words nearby and pick one at random. The netword is going to tell us the probability for every word in out vocabulary of being the "nearby word" that we chose.
+Feed word pairs. The network is going to learn statistics from the number of times each pairing shows up.
+The nn does not know anything about the offset of the output word relative to the input word. It does not learn a different set of probs for the word before the input vs the word after.
+If two diff words have very similar "context" (words around them), our model outputs similar results for these two words.
+
+
+<figure>
+<p><img src="./imgs/nlp/max_word2vec.png" class="img-responsive" alt="max_word2vec.png">
+</p>
+</figure>
+
+<p>
+Replacing with negative log likelihood
+</p>
+
+
+<figure>
+<p><img src="./imgs/nlp/nll_word2vec.png" class="img-responsive" alt="nll_word2vec.png">
+</p>
+</figure>
+
+<p>
+Transformed to proper loss function:
+</p>
+
+
+<figure>
+<p><img src="./imgs/nlp/loss_fun_word2vec.png" class="img-responsive" alt="loss_fun_word2vec.png">
+</p>
+</figure>
+
+<p>
+where <b>P</b> is
+</p>
+
+
+<figure>
+<p><img src="./imgs/nlp/p_word2vec.png" class="img-responsive" alt="p_word2vec.png">
+</p>
+</figure>
+
+<p>
+For each existing center, context pair in corpus we’re computing their “similarity score”. And divide it by sum of each theoretically possible context — to know whether score is relatively high or low. As softmax is guaranteed to take a value between 0 and 1 it defines a valid probability distribution.
+</p>
+</li>
+</ol>
+
+<p>
+Input words are passed as one-hot vectors. Hidden-layer of linear units, then into softmax layer to make predictions. Train the hidden layer weight matrix to find efficient representations for our words. This is the <b>embedding</b> matrix. The hidden layer just operates as a lookup table. Its output is just the "word vector" for the input word.
+</p>
+
+
+<figure>
+<p><img src="./imgs/nlp/skip_gram_net_arch.png" class="img-responsive" alt="skip_gram_net_arch.png">
+</p>
+</figure>
+
+<p>
+In esence, it uses two embedding matrices, the first to lookup the center word vector, and this one is multiplied to the other embedding matrix of the context word vecs, which is like making a dot product between the center word vec to all the context word vecs, the highest dot product represents the most similar word, part of its context.
+<img src="./imgs/nlp/skip-gram-architecture.png" class="img-responsive" alt="skip-gram-architecture.png">
+</p>
+
+<p>
+The embedding matrix has a size of the num of words by the num of neurons in the hidden layer (embed size).
+The embed size is much smaller than the number of unique words. its a trade-off: more features-&gt;extra computation and longer run times, but allow more subtle representations, and better models.
+</p>
+
+<p>
+<a href="http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/">word2vec tutorial-skip gram</a>
+<a href="http://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/">negative<sub>sampling</sub> word2vec</a>
+</p>
+</div>
+<ol class="org-ol"><li><a id="sec-1-0-1-3-1" name="sec-1-0-1-3-1"></a>training<br ><div class="outline-text-6" id="text-1-0-1-3-1">
+<p>
+use altered version of softmax for the loss. sample n number of negative softmax units from full set and calculate the loss only with them. (tf.nn.sampled<sub>softmax</sub><sub>loss</sub>). Cuz the vocabulary can be very large.
+Adagrad instead of SGD, cuz works better when lot of variables to optimize.
+</p>
+</div>
+</li></ol>
+</li>
+
+<li><a id="sec-1-0-1-4" name="sec-1-0-1-4"></a>GloVe.<br ><div class="outline-text-5" id="text-1-0-1-4">
+<p>
+<i>See lecture 3 of Stanford NLP course</i>
+</p>
+
+<p>
+GloVe, coined from Global Vectors, is a model for distributed word representation. The model is an unsupervised learning algorithm for obtaining vector representations for words. Training is performed on aggregated global word-word co-occurrence statistics from a corpus, and the resulting representations showcase interesting linear substructures of the word vector space.
+</p>
+
+<p>
+Creates embeddings by accumulating counts of co-occurrences.
+Count-based models learn their vectors by essentially doing dimensionality reduction on the co-occurrence counts matrix. They first construct a large matrix of (words x context) co-occurrence information, i.e. for each "word" (the rows), you count how frequently we see this word in some "context" (the columns) in a large corpus.  The number of "contexts" is of course large, since it is essentially combinatorial in size. So then they factorize this matrix to yield a lower-dimensional (word x features) matrix, where each row now yields a vector representation for each word. In general, this is done by minimizing a "reconstruction loss" which tries to find the lower-dimensional representations which can explain most of the variance in the high-dimensional data. In the specific case of GloVe, the counts matrix is preprocessed by normalizing the counts and log-smoothing them. This turns out to be A Good Thing in terms of the quality of the learned representations.
+</p>
+
+<p>
+However, as pointed out, when we control for all the training hyper-parameters, the embeddings generated using the two methods tend to perform very similarly in downstream NLP tasks. The additional benefits of GloVe over word2vec is that it is easier to parallelize the implementation which means it's easier to train over more data     
+<a href="https://www.quora.com/How-is-GloVe-different-from-word2vec">https://www.quora.com/How-is-GloVe-different-from-word2vec</a>
+</p>
+</div>
+
+
+
+<ol class="org-ol"><li><a id="sec-1-0-1-4-1" name="sec-1-0-1-4-1"></a>Intuition<br ><div class="outline-text-6" id="text-1-0-1-4-1">
+<p>
+The main intuition underlying the model is the simple observation that ratios of word-word co-occurrence probabilities have the potential for encoding some form of meaning. For example, consider the co-occurrence probabilities for target words ice and steam with various probe words from the vocabulary. Here are some actual probabilities from a 6 billion word corpus:
+</p>
+
+
+<figure>
+<p><img src="./imgs/nlp/glove_table.png" class="img-responsive" alt="glove_table.png">
+</p>
+</figure>
+
+<p>
+As one might expect, ice co-occurs more frequently with solid than it does with gas, whereas steam co-occurs more frequently with gas than it does with solid. Both words co-occur with their shared property water frequently, and both co-occur with the unrelated word fashion infrequently. Only in the ratio of probabilities does noise from non-discriminative words like water and fashion cancel out, so that large values (much greater than 1) correlate well with properties specific to ice, and small values (much less than 1) correlate well with properties specific of steam. In this way, the ratio of probabilities encodes some crude form of meaning associated with the abstract concept of thermodynamic phase.
+</p>
+
+<p>
+The training objective of GloVe is to learn word vectors such that their dot product equals the logarithm of the words' probability of co-occurrence. Owing to the fact that the logarithm of a ratio equals the difference of logarithms, this objective associates (the logarithm of) ratios of co-occurrence probabilities with vector differences in the word vector space. Because these ratios can encode some form of meaning, this information gets encoded as vector differences as well. For this reason, the resulting word vectors perform very well on word analogy tasks.
+</p>
+
+
+<figure>
+<p><img src="./imgs/nlp/glove_loss_function.png" class="img-responsive" alt="glove_loss_function.png">
+</p>
+</figure>
+
+<p>
+<b>P<sub>ij</sub></b> is the count of how often word  i appears in context of word j. <b>P</b> is the co-occurrence matrix. <b>f</b> is a weighting function which help us to prevent learning only from extremely common word pairs. 
+</p>
+
+<p>
+<a href="http://text2vec.org/glove.html">http://text2vec.org/glove.html</a>
+</p>
+</div>
+</li>
+
+<li><a id="sec-1-0-1-4-2" name="sec-1-0-1-4-2"></a>Matrix Factorization<br ><div class="outline-text-6" id="text-1-0-1-4-2">
+<p>
+The idea then is to apply matrix factorization to approximate this matrix as depicted in the following figure.
+</p>
+
+
+<figure>
+<p><img src="./imgs/nlp/glove_matrix_factorization.png" class="img-responsive" alt="glove_matrix_factorization.png">
+</p>
+</figure>
+
+<p>
+Considering the Word-Context (WC) matrix, Word-Feature (WF) matrix and Feature-Context (FC) matrix, we try to factorize WC = WF x FC, such that we we aim to reconstruct WC from WF and FC by multiplying them. For this, we typically initialize WF and FC with some random weights and attempt to multiply them to get WC’ (an approximation of WC) and measure how close it is to WC. We do this multiple times using Stochastic Gradient Descent (SGD) to minimize the error. Finally, the Word-Feature matrix (WF) gives us the word embeddings for each word where F can be preset to a specific number of dimensions. 
+<a href="https://www.kdnuggets.com/2018/04/implementing-deep-learning-methods-feature-engineering-text-data-glove.html">https://www.kdnuggets.com/2018/04/implementing-deep-learning-methods-feature-engineering-text-data-glove.html</a>
+</p>
+</div>
+</li>
+
+<li><a id="sec-1-0-1-4-3" name="sec-1-0-1-4-3"></a>Hyperparameters<br ><div class="outline-text-6" id="text-1-0-1-4-3">
+<ul class="org-ul">
+<li>Dimension: best ~300, slight drop-off afterwards
+</li>
+<li>Window size: around 8 each center word
+</li>
+</ul>
+</div>
+</li></ol>
+</li>
+
+
+<li><a id="sec-1-0-1-5" name="sec-1-0-1-5"></a>FastText<br ><div class="outline-text-5" id="text-1-0-1-5">
+<p>
+Fasttext (which is essentially an extension of word2vec model), treats each word as composed of character ngrams. So the vector for a word is made of the sum of this character n grams.
+At each training step in FastText, the mean of the target word vector and its component n-gram vectors are used for training. The adjustment that is calculated from the error is then used uniformly to update each of the vectors that were combined to form the target. This adds a lot of additional computation to the training step. At each point, a word needs to sum and average its n-gram component parts. The trade-off is a set of word-vectors that contain embedded sub-word information. These vectors have been shown to be more accurate than Word2Vec vectors by a number of different measures
+</p>
+<ul class="org-ul">
+<li>Generate better word embeddings for rare words ( even if words are rare their character n grams are still shared with other words - hence the embeddings can still be good).
+</li>
+<li>Out of vocabulary words - they can construct the vector for a word from its character n grams even if word doesn't appear in training corpus. Both Word2vec and Glove can't.
+</li>
+<li>since the training is at character n-gram level, it takes longer to generate fasttext embeddings compared to word2vec 
+</li>
+<li>As the corpus size grows, the memory requirement grows too - the number of ngrams that get hashed into the same ngram bucket would grow.
+</li>
+<li>The usage of character embeddings (individual characters as opposed to n-grams) for downstream tasks have recently shown to boost the performance of those tasks compared to using word embeddings like word2vec or Glove.
+</li>
+</ul>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-0-2" class="outline-4">
+<h4 id="sec-1-0-2"><span class="section-number-4">1.0.2</span> Seq2Seq</h4>
+</div>
+
+<div id="outline-container-sec-1-0-3" class="outline-4">
+<h4 id="sec-1-0-3"><span class="section-number-4">1.0.3</span> Charnn</h4>
+</div>
+
+<div id="outline-container-sec-1-0-4" class="outline-4">
+<h4 id="sec-1-0-4"><span class="section-number-4">1.0.4</span> Machine Translation</h4>
+</div>
+
+<div id="outline-container-sec-1-0-5" class="outline-4">
+<h4 id="sec-1-0-5"><span class="section-number-4">1.0.5</span> References</h4>
+<div class="outline-text-4" id="text-1-0-5">
+<ul class="org-ul">
+<li><a href="http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/">word2vec tutorial-skip gram</a>
+</li>
+<li><a href="http://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/">negative<sub>sampling</sub> word2vec</a>
+</li>
+<li><a href="https://www.quora.com/How-is-GloVe-different-from-word2vec">How is Glove different from word2vec</a>
+</li>
+<li><a href="https://www.kdnuggets.com/2018/04/implementing-deep-learning-methods-feature-engineering-text-data-glove.html">Glove</a>
+</li>
+<li><a href="http://web.stanford.edu/class/cs224n/syllabus.html">Stanford CS224n: Natural Language Processing with deep learning</a>
+</li>
+<li><a href="https://www.quora.com/What-is-the-main-difference-between-word2vec-and-fastText">Difference between word2vec and fastText</a>
+</li>
+<li><a href="https://nathanrooy.github.io/posts/2018-03-22/word2vec-from-scratch-with-python-and-numpy/">https://nathanrooy.github.io/posts/2018-03-22/word2vec-from-scratch-with-python-and-numpy/</a>
+</li>
+<li><a href="https://towardsdatascience.com/implementing-word2vec-in-pytorch-skip-gram-model-e6bae040d2fb">https://towardsdatascience.com/implementing-word2vec-in-pytorch-skip-gram-model-e6bae040d2fb</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div><div class="col-md-3"><nav id="table-of-contents">
+<div id="text-table-of-contents" class="bs-docs-sidebar">
+<ul class="nav">
+<li><a href="#sec-1">1. Natural Language Processing</a></li>
+</ul>
+</div>
+</nav>
+</div></div></div>
+<footer id="postamble" class="">
+<div><p class="author">Author: gabo</p>
+<p class="date">Created: 2018-12-07 vie 11:10</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.1 (<a href="http://orgmode.org">Org-mode</a> 9.1.13)</p>
+</div>
+</footer>
+</body>
+</html>

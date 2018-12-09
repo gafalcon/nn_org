@@ -198,7 +198,7 @@
 **** TODO Inception
 *** TODO Deconvolutional networks
 *** Recurrent networks
-
+    [[./rnn.org]]
 *** Autoencoders
     NN capable of unsupervised feature learning
     [[./autoencoders.org][autoencoders]]

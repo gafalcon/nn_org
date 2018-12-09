@@ -108,9 +108,61 @@
      - since the training is at character n-gram level, it takes longer to generate fasttext embeddings compared to word2vec 
      - As the corpus size grows, the memory requirement grows too - the number of ngrams that get hashed into the same ngram bucket would grow.
      - The usage of character embeddings (individual characters as opposed to n-grams) for downstream tasks have recently shown to boost the performance of those tasks compared to using word embeddings like word2vec or Glove.
-*** Seq2Seq
+       
+*** Neural Networks for NLP
+**** Recurrent Neural Networks
+    [[./rnn.org]]
+***** TODO Examples (CODE)
+**** Convolutional Neural Networks
+     A convolutional neural network for text only operates in two dimensions, with the filters only needing to be moved along the temporal dimension.
 
+     #+ATTR_ORG: :width 500
+     [[./imgs/nlp/cnn_for_nlp.png]]
+
+     They are more parallelizable than RNNs, as the state at every timestep only depends on the local context (via the convolution operation) rather than all past states as in the RNN. CNNs can be extended with wider receptive fields using dilated convolutions to capture a wider context (Kalchbrenner et al., 2016). CNNs and LSTMs can also be combined and stacked
+     and convolutions can be used to speed up an LSTM.
+
+
+***** TODO Examples (CODE) 
+**** TODO Recursive Neural Networks
+     language is inherently hierarchical. Words are composed into higher-order phrases and clauses. Treating sentences as trees rather than as a sequence gives rise to recursive neural networks
+
+     #+ATTR_ORG: :width 400
+     [[./imgs/nlp/recursive_nn.png]]
+     
+
+     At every node of the tree, a new representation is computed by composing the representations of the child nodes. As a tree can also be seen as imposing a different processing order on an RNN, LSTMs have naturally been extended to trees 
+***** Examples (CODE)
+
+*** TODO Seq2Seq (2014)
+    General framework for mapping one sequence to another one using a neural network. In the framework, an encoder neural network process a sentence symbol by symbol and compresses it into a vector representation; a decoder neural network then predicts the output symbol by symbol based on the encoder state, taking as input at every step the previously predicted symbol 
+
+     #+ATTR_ORG: :width 500
+    [[./imgs/nlp/seq2seq.png]]
+
+    This framework due to its flexibility is now the go-to framework for natural language generation tasks, with different models taking on the role of the encoder and the decoder. 
+
+    
+**** TODO Examples (CODE)
+
+*** TODO Attention
+    The main bottleneck of sequence-to-sequence learning is that it requires to compress the entire content of the source sequence into a fixed-size vector. Attention alleviates this by allowing the decoder to look back at the source sequence hidden states, which are then provided as a weighted average as additional input to the decoder
+    
+     #+ATTR_ORG: :width 300
+    [[./imgs/nlp/attention.png]]
+    
+    Attention is widely applicable and potentially useful for any task that requires making decisions based on certain parts of the input.
+    Attention is also not restricted to just looking at the input sequence; self-attention can be used to look at the surrounding words in a sentence or document to obtain more contextually sensitive word representations. 
+**** TODO Examples (CODE)
+     - https://www.kaggle.com/gafalcon/using-lstms-with-attention-for-emotion-recognition/notebook
 *** Charnn
+
+*** Memory Based Networks (2015)
+    Attention can be seen as a form of fuzzy memory where the memory consists of the past hidden states of the model, with the model choosing what to retrieve from memory.  Many models with a more explicit memory have been proposed. 
+    Memory is often accessed based on similarity to the current state similar to attention and can typically be written to and read from. Models differ in how they implement and leverage the memory. For instance, End-to-end Memory Networks process the input multiple times and update the memory to enable multiple steps of inference. Neural Turing Machines also have a location-based addressing, which allows them to learn simple computer programs like sorting. Memory-based models are typically applied to tasks, where retaining information over longer time spans should be useful such as language modelling and reading comprehension. The concept of a memory is very versatile: A knowledge base or table can function as a memory, while a memory can also be populated based on the entire input or particular parts of it.
+
+*** Pretrained language models (2018)
+    language models only require unlabelled text; training can thus scale to billions of tokens, new domains, and new languages.Beneficial across a diverse range of tasks. Pretrained language models have been shown enable learning with significantly less data. As language models only require unlabelled data, they are particularly beneficial for low-resource languages where labelled data is scarce.  
 
 *** Machine Translation
 
@@ -123,3 +175,4 @@
     - [[https://www.quora.com/What-is-the-main-difference-between-word2vec-and-fastText][Difference between word2vec and fastText]]
     - [[https://nathanrooy.github.io/posts/2018-03-22/word2vec-from-scratch-with-python-and-numpy/]]
     - https://towardsdatascience.com/implementing-word2vec-in-pytorch-skip-gram-model-e6bae040d2fb
+    - [[http://blog.aylien.com/a-review-of-the-recent-history-of-natural-language-processing/?utm_medium=email&utm_source=topic+optin&utm_campaign=awareness&utm_content=20181015+ai+nl&mkt_tok=eyJpIjoiWlRGaFpEazJPR1ZtWWpCaCIsInQiOiJVR0FON0JuTWFmRU9rUnczb1NWS1hFR1dFbkh2S3dSdlJlZ3NwZ1FkN1VUQUVMbU5nM2hQTUhKNkczakdQYjlRUnQ2c2NWUnFhbWxkZVBpTDdnMFRNTmQ1aGpJOGdDaUQ0RW02R2wyQzc1YnVJTjFhNThaMzZWdjE1WUk3ZUtxNyJ9#2013neuralnetworksfornlp][Review of recent history of nlp]]
