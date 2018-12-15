@@ -56,7 +56,7 @@
    #+CAPTION: vanishing gradient
    [[./imgs/sigmoid_vanishing_gradient.png]]
    
-** Long short-term memory units (LSTMs)
+** TODO Long short-term memory units (LSTMs)
    LSTMs preserve the error backpropagated through time and layers. they allow recurrent nets to continue to learn over many time steps (over 1000), opening channel to link causes and effects remotely. 
 
    Contain info outside of normal flow in a gated cell. The cell makes decisions about what to store, when to allow reads, writes erasures, via gates that open and close.
@@ -139,7 +139,7 @@
     #+ATTR_ORG: :width 700
    [[./imgs/lstm_var_gru.png]] 
 
-
+*** TODO Bi-directional LSTMs
 *** Caracter-Level Language Models
     we’ll give the RNN a huge chunk of text and ask it to model the probability distribution of the next character in the sequence given a sequence of previous characters. This will then allow us to generate new text one character at a time.
 

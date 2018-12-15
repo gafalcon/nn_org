@@ -119,8 +119,22 @@
      #+ATTR_ORG: :width 500
      [[./imgs/nlp/cnn_for_nlp.png]]
 
+     CNNs are very fast. Compared to something like n-grams, CNNs are also /efficient/ in terms of representation. Conv filters learn good representations automatically, without needing to represent the whole vocab.
      They are more parallelizable than RNNs, as the state at every timestep only depends on the local context (via the convolution operation) rather than all past states as in the RNN. CNNs can be extended with wider receptive fields using dilated convolutions to capture a wider context (Kalchbrenner et al., 2016). CNNs and LSTMs can also be combined and stacked
      and convolutions can be used to speed up an LSTM.
+***** How to apply CNN to NLP
+      [[http://www.wildml.com/2015/11/understanding-convolutional-neural-networks-for-nlp/][Understanding CCN for NLP]]
+      Each row is a vector that represents a word(Word embeddings). In NLP we use filters that slide over full rows of the matrix(words). The "width" of filters is the same as the width of the input matrix. The height, varies, but sliding windows over 2-5 words at a time is typical.
+      [[./imgs/nlp/cnn.png]]
+
+      Location Invariance and local Compositionality made intuitive sense for imgs, but not so much for NLP.  You probably do care a lot where in the sentence a word appears. Pixels close to each other are likely to be semantically related (part of the same object), but the same isn’t always true for words. In many languages, parts of phrases could be separated by several other words. The compositional aspect isn’t obvious either. Clearly, words compose in some ways, like an adjective modifying a noun, but how exactly this works what higher level representations actually “mean” isn’t as obvious as in the Computer Vision case.
+
+      In NLP you could imagine having various channels: Have separate channels for different word embeddings, or have a channel for the same sentence represented in different languages, or phrased in different ways.
+****** Applications
+       - The most is for classification tasks: Sentiment Analysis, Spam Detection or Topic Categorization. Convs and pooling lose info about local order of words, so that sequence tagging as in PoS Tagging or Entity Extraction is harder to fit into a pure CNN arch.
+       - [[http://arxiv.org/abs/1510.03820][Sensitive Analysis of CNNs for Sentence Classification]] performs an empirical evaluation on the effect of varying hyperparameters in CNN archs, investigating performance and variance over multiple runs. For text classification, the results of this paper as a starting point would be an excellent idea. Max-pooling always beat average pooling, the ideal filter sizes are important but task-dependent, and regularization doesn’t make a big different in the NLP tasks considered. A caveat is that all the datasets were quite similar in terms of their document length, so the same guidelines may not apply to data that looks considerably different.
+       - Most CNN archs learn embeddings for words and sentences as part of their training procedure.
+       - There has also been research in applying CNNs directly to characters. Results show that learning directly from char level input works well on large datasets(millions of ex), but underperforms simpler models on smaller datasets(hundreds of thousands of examples).
 
 
 ***** TODO Examples (CODE) 
@@ -155,8 +169,8 @@
     Attention is also not restricted to just looking at the input sequence; self-attention can be used to look at the surrounding words in a sentence or document to obtain more contextually sensitive word representations. 
 **** TODO Examples (CODE)
      - https://www.kaggle.com/gafalcon/using-lstms-with-attention-for-emotion-recognition/notebook
-*** Charnn
-
+*** TODO Charnn
+*** TODO Language Modelling
 *** Memory Based Networks (2015)
     Attention can be seen as a form of fuzzy memory where the memory consists of the past hidden states of the model, with the model choosing what to retrieve from memory.  Many models with a more explicit memory have been proposed. 
     Memory is often accessed based on similarity to the current state similar to attention and can typically be written to and read from. Models differ in how they implement and leverage the memory. For instance, End-to-end Memory Networks process the input multiple times and update the memory to enable multiple steps of inference. Neural Turing Machines also have a location-based addressing, which allows them to learn simple computer programs like sorting. Memory-based models are typically applied to tasks, where retaining information over longer time spans should be useful such as language modelling and reading comprehension. The concept of a memory is very versatile: A knowledge base or table can function as a memory, while a memory can also be populated based on the entire input or particular parts of it.
@@ -165,6 +179,69 @@
     language models only require unlabelled text; training can thus scale to billions of tokens, new domains, and new languages.Beneficial across a diverse range of tasks. Pretrained language models have been shown enable learning with significantly less data. As language models only require unlabelled data, they are particularly beneficial for low-resource languages where labelled data is scarce.  
 
 *** Machine Translation
+
+*** Best Practices
+    [[http://ruder.io/deep-learning-nlp-best-practices/index.html][Deep learning best practices]]
+****  Word embeddings
+    The dimensionality is task-dependent: a smaller dimensionality better for more syntactic tasks such as named entity recognition or part-of-speech (POS) tagging, while a larger dim is more useful for more semantic tasks such as sentiment analysis.
+**** Depth
+     State-of-the-art approaches now regularly use deep Bi-LSTMs, typically consisting of 3-4 layers, e.g. for POS tagging and semantic role labelling. Performance improvements of making the model deeper than 2 layers are minimal. These observations hold for most sequence tagging and structured prediction problems. For classification, deep or very deep models perform well only with character-level input and shallow word-level models are still the state-of-the-art
+**** Layer connections
+***** Highway layers (2015)
+      A one-layer MLP applies an affine transformation followed by a non-linearity g to its input x. 
+      A *highway layer* computes the following function instead:
+
+      [[./imgs/nlp/h_mlp.png]]
+
+      *t* is the /transform/ gate and (1 - *t*) is the /carry/ gate. Highway layers are similar to gates of LSTM. They adaptively /carry/ some dimensions of the input directly to the output.
+      
+      [[./imgs/nlp/h_highway.png]]
+
+      [[./imgs/nlp/t_highway.png]]
+      SoA results in language modelling. Also used for speech recognition.
+
+
+***** Residual connections (2016)
+      Adds input of current layer to its output via a short-cut connection. Mitigates vanishing gradient problem.
+***** Dense connections (2017)
+      Adds direct connections from each layer to all subsequent layers. Succesfully used in computer vision. Also useful for Multi-Task Learning of diff NLP tasks.
+
+**** Dropout (2014)
+     Still the go-to regularizer for NLP. Dropout of 0.5 shown effective for most cases. (Adaptive dropout and evolutional dropout not wide adopted). The main problem is that it could not be applied to recurrent connections, as the aggregating dropout masks would effectively zero out embeddings over time.
+***** Recurrent dropout
+      Applying same dropout across timesteps at layer /l/. 
+      SoA results in semantic role labelling and language modelling(2017).
+
+**** Multi-task learning
+*****  Auxiliary objectives.
+      Find auxiliary objectives that are useful for the task we care about.
+***** Task-specific layers.
+      Allow the model to learn task-specific layers. Placing the output layer of one task at a lower level. 
+**** TODO Attention
+**** Optimization
+     - Adam most popular for NLP. Converges much faster, but SGD with learning rate annealing or with properly tuned momentum outperforms Adam.
+     - We can perform learning rate annealing with restarts: set a lr and train model until convergence. Then, halve lr and restart by loading previous best model. Adam with 2 restarts and learning rate annealing is faster and performs better than SGD with annealing.
+**** Emsembling
+     Prefer to ensemble multiple independently trained models to maximize model diversity.
+**** Hyperparameter optimization
+     Bayesian Optimization ideal tool for black-box optimization of hyperparams.
+**** LSTM tricks
+***** Learning initial state
+      Instead of fixing the initial state, we can learn it like any other parameter.
+***** Tying input and output embeddings
+      If LSTM predicts words as in language modelling, input and output params can be shared. Useful on small datasets that do not allow large number of params.
+***** Gradient norm clipping
+      Rather than clipping each gradient independently, clipping the global norm of the gradient yields more significant improvements.
+***** Down-projection
+      To reduce num of output params, the hidden state of LSTM can be projected to smaller size.
+**** Task-specific best practices
+***** Classification
+      CNNs have been popular for classification tasks in NLP.
+      - *CNN filters*. Combining filter sizes near the optimal filter size (3,4,5). The optimal num of feature maps is in range 50-600.
+      - *Aggregation function*. 1-max-pooling outperforms average-pooling and k-max pooling
+***** TODO Sequence labelling
+      - *Tagging scheme*
+      - *CRF output layer*
 
 *** References
     - [[http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/][word2vec tutorial-skip gram]]
@@ -176,3 +253,5 @@
     - [[https://nathanrooy.github.io/posts/2018-03-22/word2vec-from-scratch-with-python-and-numpy/]]
     - https://towardsdatascience.com/implementing-word2vec-in-pytorch-skip-gram-model-e6bae040d2fb
     - [[http://blog.aylien.com/a-review-of-the-recent-history-of-natural-language-processing/?utm_medium=email&utm_source=topic+optin&utm_campaign=awareness&utm_content=20181015+ai+nl&mkt_tok=eyJpIjoiWlRGaFpEazJPR1ZtWWpCaCIsInQiOiJVR0FON0JuTWFmRU9rUnczb1NWS1hFR1dFbkh2S3dSdlJlZ3NwZ1FkN1VUQUVMbU5nM2hQTUhKNkczakdQYjlRUnQ2c2NWUnFhbWxkZVBpTDdnMFRNTmQ1aGpJOGdDaUQ0RW02R2wyQzc1YnVJTjFhNThaMzZWdjE1WUk3ZUtxNyJ9#2013neuralnetworksfornlp][Review of recent history of nlp]]
+    - [[http://ruder.io/deep-learning-nlp-best-practices/index.html][Deep learning best practices]]
+    - [[http://www.wildml.com/2015/11/understanding-convolutional-neural-networks-for-nlp/][Understanding CCN for NLP]]
