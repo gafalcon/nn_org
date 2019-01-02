@@ -125,6 +125,8 @@
 ***** How to apply CNN to NLP
       [[http://www.wildml.com/2015/11/understanding-convolutional-neural-networks-for-nlp/][Understanding CCN for NLP]]
       Each row is a vector that represents a word(Word embeddings). In NLP we use filters that slide over full rows of the matrix(words). The "width" of filters is the same as the width of the input matrix. The height, varies, but sliding windows over 2-5 words at a time is typical.
+
+     #+ATTR_ORG: :width 600
       [[./imgs/nlp/cnn.png]]
 
       Location Invariance and local Compositionality made intuitive sense for imgs, but not so much for NLP.  You probably do care a lot where in the sentence a word appears. Pixels close to each other are likely to be semantically related (part of the same object), but the same isn’t always true for words. In many languages, parts of phrases could be separated by several other words. The compositional aspect isn’t obvious either. Clearly, words compose in some ways, like an adjective modifying a noun, but how exactly this works what higher level representations actually “mean” isn’t as obvious as in the Computer Vision case.
@@ -138,6 +140,11 @@
 
 
 ***** TODO Examples (CODE) 
+      - [[http://www.wildml.com/2015/12/implementing-a-cnn-for-text-classification-in-tensorflow/][Implementing a CNN for text-classification]]
+      - Notebooks:
+        - [[./notebooks/nlp/CNN_text_classification.ipynb]]
+        - [[./notebooks/nlp/CNN_text_classification_keras.ipynb]]
+      
 **** TODO Recursive Neural Networks
      language is inherently hierarchical. Words are composed into higher-order phrases and clauses. Treating sentences as trees rather than as a sequence gives rise to recursive neural networks
 
