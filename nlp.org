@@ -138,8 +138,7 @@
        - Most CNN archs learn embeddings for words and sentences as part of their training procedure.
        - There has also been research in applying CNNs directly to characters. Results show that learning directly from char level input works well on large datasets(millions of ex), but underperforms simpler models on smaller datasets(hundreds of thousands of examples).
 
-
-***** TODO Examples (CODE) 
+***** Examples (CODE) 
       - [[http://www.wildml.com/2015/12/implementing-a-cnn-for-text-classification-in-tensorflow/][Implementing a CNN for text-classification]]
       - Notebooks:
         - [[./notebooks/nlp/CNN_text_classification.ipynb]]
@@ -250,6 +249,12 @@
       - *Tagging scheme*
       - *CRF output layer*
 
+*** 
+*** TODO PoS tagging
+*** Libraries
+**** Ktext
+     ktext performs common pre-processing steps associated with deep learning (cleaning, tokenization, padding, truncation). 
+     [[./https://github.com/hamelsmu/ktext]]
 *** References
     - [[http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/][word2vec tutorial-skip gram]]
     - [[http://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/][negative_sampling word2vec]]
@@ -262,3 +267,4 @@
     - [[http://blog.aylien.com/a-review-of-the-recent-history-of-natural-language-processing/?utm_medium=email&utm_source=topic+optin&utm_campaign=awareness&utm_content=20181015+ai+nl&mkt_tok=eyJpIjoiWlRGaFpEazJPR1ZtWWpCaCIsInQiOiJVR0FON0JuTWFmRU9rUnczb1NWS1hFR1dFbkh2S3dSdlJlZ3NwZ1FkN1VUQUVMbU5nM2hQTUhKNkczakdQYjlRUnQ2c2NWUnFhbWxkZVBpTDdnMFRNTmQ1aGpJOGdDaUQ0RW02R2wyQzc1YnVJTjFhNThaMzZWdjE1WUk3ZUtxNyJ9#2013neuralnetworksfornlp][Review of recent history of nlp]]
     - [[http://ruder.io/deep-learning-nlp-best-practices/index.html][Deep learning best practices]]
     - [[http://www.wildml.com/2015/11/understanding-convolutional-neural-networks-for-nlp/][Understanding CCN for NLP]]
+

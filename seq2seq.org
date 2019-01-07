@@ -1,0 +1,58 @@
+
+* Seq2Seq
+
+  #+ATTR_ORG: :width 500
+  [[./imgs/nlp/seq2seq2.png]]
+
+  It consists of two RNNs: An Encoder and a Decoder. The encoder takes a sequence(sentence) as input and processes one symbol(word) at each timestep. Its objective is to convert a sequence of symbols into a fixed size feature vector that encodes only the important information in the sequence while losing the unnecessary information. 
+
+  Each hidden state influences the next hidden state and the final hidden state can be seen as the summary of the sequence. This state is called the context or thought vector, as it represents the intention of the sequence. From the context, the decoder generates another sequence, one symbol(word) at a time. Here, at each time step, the decoder is influenced by the context and the previously generated symbols.
+  It is trained to predict the next characters of the target sequence, given previous characters of the target sequence. Specifically, it is trained to turn the target sequences into the same sequences but offset by one timestep in the future, a training process called *"teacher forcing"* in this context. Importantly, the encoder uses as initial state the state vectors from the encoder, which is how the decoder obtains information about what it is supposed to generate.
+  
+  Note that we discard the output from the encoder RNN, only recovering the hidden state.
+
+** Inference
+   In inference mode, i.e. when we want to decode unknown input sequences, we go through a slightly different process:
+   
+    1) Encode the input sequence into state vectors.
+    2) Start with a target sequence of size 1 (just the start-of-sequence character).
+    3) Feed the state vectors and 1-char target sequence to the decoder to produce predictions for the next character.
+    4) Sample the next character using these predictions (we simply use argmax).
+    5) Append the sampled character to the target sequence
+    6) Repeat until we generate the end-of-sequence character or we hit the character limit.
+
+** Vocabulary
+   There are four symbols, that we need our vocabulary to contain. Seq2seq vocabularies usually reserve the first four spots for these elements:
+- <PAD>: The inputs in the batches all need to be the same width. That’s why we’ll need to pad shorter inputs to bring them to the same width of the batch
+- <EOS>:It allows us to tell the decoder where a sentence ends, and it allows the decoder to indicate the same thing in its outputs as well.
+- <UNK>:improve the resource efficiency of your model by ignoring words that don’t show up often enough in your vocabulary to warrant consideration. We replace those with <UNK>.
+- <GO>: This is the input to the first time step of the decoder to let the decoder know when to start generating output.
+*** Bucketing
+    Putting sentences into buckets of different sizes. Consider this list of buckets : [ (5,10), (10,15), (20,25), (40,50) ]. If the length of a query is 4 and the length of its response is 4 (as in our previous example), we put this sentence in the bucket (5,10). The query will be padded to length 5 and the response will be padded to length 10. While running the model (training or predicting), we use a different model for each bucket, compatible with the lengths of query and response. All these models, share the same parameters and hence function exactly the same way.
+
+** Preparing inputs
+1. These models work a lot better if we feed the decoder our target sequence regardless of what its timesteps actually output in the training run. So unlike in the graph, we will not feed the output of the decoder to itself in the next timestep. (TEACHER FORCING)
+2. Batching. Reported better model performance if the inputs are reversed. So you may also choose to reverse the order of words in the input sequence.
+
+During the preprocessing we do the following:
+- we build our vocabulary of unique words (and count the occurrences while we’re at it)
+- we replace words with low frequency with <UNK>
+- create a copy of conversations with the words replaced by their IDs
+- we can choose to add the <GO> and <EOS> word ids to the target dataset now, or do it at training time
+
+** TODO Beam Search 
+
+** With Attention
+   As the length of the sequence gets larger, we start losing considerable amount of information. This is why the basic seq2seq model doesn’t work well in decoding large sequences. The attention mechanism, allows the decoder to selectively look at the input sequence while decoding. This takes the pressure off the encoder to encode every useful information from the input.
+   During each timestep in the decoder, instead of using a fixed context (last hidden state of encoder), a distinct context vector c_i is used for generating word y_i. This context vector c_i is basically the weighted sum of hidden states of the encoder.
+
+   Each hidden state in the encoder encodes information about the local context in that part of the sentence. As data flows from word 0 to word n, this local context information gets diluted. This makes it necessary for the decoder to peak through the encoder, to know the local contexts. Different parts of input sequence contain information necessary for generating different parts of the output sequence. In other words, each word in the output sequence is aligned to different parts of the input sequence. The alignment model gives us a measure of how well the output at position i match with inputs at around postion j. Based on which, we take a weighted sum of the input contexts (hidden states) to generate each word in the ouput sequence.
+
+** Examples
+   - [[https://blog.keras.io/a-ten-minute-introduction-to-sequence-to-sequence-learning-in-keras.html]]
+   - [[https://towardsdatascience.com/seq2seq-model-in-tensorflow-ec0c557e560f][tensorflow implementation of seq2seq]]
+** References
+- https://towardsdatascience.com/sequence-to-sequence-model-introduction-and-concepts-44d9b41cd42d
+- http://complx.me/2016-06-28-easy-seq2seq/
+- https://blog.keras.io/a-ten-minute-introduction-to-sequence-to-sequence-learning-in-keras.html
+
